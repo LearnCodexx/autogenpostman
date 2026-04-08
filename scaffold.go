@@ -27,7 +27,7 @@ func EnsurePostmanCommand(cfg ScaffoldConfig) (string, error) {
 		cfg.CommandPath = filepath.Join("cmd", "postman", "main.go")
 	}
 	if cfg.GeneratorImportPath == "" {
-		cfg.GeneratorImportPath = "learncodexx/point_of_sale/generate_postman_file"
+		cfg.GeneratorImportPath = "autogenpostman"
 	}
 	if cfg.CollectionName == "" {
 		cfg.CollectionName = "API"

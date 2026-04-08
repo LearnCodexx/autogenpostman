@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 
-	postmangen "learncodexx/point_of_sale/generate_postman_file"
+	postmangen "autogenpostman"
 )
 
 func main() {
 	var (
 		workingDir  = flag.String("working-dir", ".", "project root directory")
 		commandPath = flag.String("command-path", "cmd/postman/main.go", "target path for generated command")
-		importPath  = flag.String("import-path", "learncodexx/point_of_sale/generate_postman_file", "go import path for generator package")
+		importPath  = flag.String("import-path", "autogenpostman", "go import path for generator package")
 		outputPath  = flag.String("output", "docs/postman_collection.json", "default postman collection output path")
 		collection  = flag.String("collection-name", "API", "default collection name")
 		force       = flag.Bool("force", false, "overwrite file if already exists")
