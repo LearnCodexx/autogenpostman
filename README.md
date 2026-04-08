@@ -65,7 +65,7 @@ import (
     "context"
     "log"
 
-    postmangen "learncodexx/point_of_sale/generate_postman_file"
+    postmangen "github.com/learncodexx/autogenpostman"
 )
 
 func main() {
@@ -100,7 +100,7 @@ import (
     "context"
     "log"
 
-    postmangen "learncodexx/point_of_sale/generate_postman_file"
+    postmangen "github.com/learncodexx/autogenpostman"
 )
 
 func main() {
