@@ -17,7 +17,7 @@ This approach makes the package more stable for use across many applications.
 If this module is published to git, from other projects:
 
 ```bash
-go get learncodexx/point_of_sale/generate_postman_file@latest
+go get github.com/learncodexx/autogenpostman@latest
 ```
 
 ## Auto Create `cmd/postman/main.go` (after `go get`)
@@ -26,7 +26,7 @@ Go does not provide automatic hooks that run right after `go get`.
 Instead, run this command after installing the package:
 
 ```bash
-go run learncodexx/point_of_sale/generate_postman_file/cmd/postmaninit@latest \
+go run github.com/learncodexx/autogenpostman/cmd/postmaninit@latest \
   -working-dir . \
   -command-path cmd/postman/main.go \
   -collection-name "User Service API"
