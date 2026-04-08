@@ -1,29 +1,29 @@
 # generate_postman_file
 
-Package Go untuk generate Postman collection otomatis dari OpenAPI/Swagger.
+Go package for automatically generating Postman collections from OpenAPI/Swagger.
 
-## Pendekatan
+## Approach
 
-Package ini tidak melakukan mapping OpenAPI ke Postman secara custom.
-Ia hanya menjadi orchestration layer untuk tool yang sudah mature:
+This package does not perform custom OpenAPI to Postman mapping.
+It only serves as an orchestration layer for mature tools:
 
-- `swag` untuk generate swagger docs (opsional)
-- `openapi-to-postmanv2` (via `npx`) untuk convert ke Postman Collection v2.1
+- `swag` for generating swagger docs (optional)
+- `openapi-to-postmanv2` (via `npx`) for converting to Postman Collection v2.1
 
-Dengan ini, package lebih stabil untuk dipakai di banyak aplikasi.
+This approach makes the package more stable for use across many applications.
 
-## Install
+## Installation
 
-Jika module ini dipublish di git, dari project lain:
+If this module is published to git, from other projects:
 
 ```bash
 go get learncodexx/point_of_sale/generate_postman_file@latest
 ```
 
-## Auto Create `cmd/postman/main.go` (setelah `go get`)
+## Auto Create `cmd/postman/main.go` (after `go get`)
 
-Go tidak menyediakan hook otomatis yang berjalan tepat setelah `go get`.
-Sebagai gantinya, jalankan 1 command ini setelah install package:
+Go does not provide automatic hooks that run right after `go get`.
+Instead, run this command after installing the package:
 
 ```bash
 go run learncodexx/point_of_sale/generate_postman_file/cmd/postmaninit@latest \
@@ -32,12 +32,12 @@ go run learncodexx/point_of_sale/generate_postman_file/cmd/postmaninit@latest \
   -collection-name "User Service API"
 ```
 
-Setelah itu file `cmd/postman/main.go` akan dibuat otomatis.
+After that, the file `cmd/postman/main.go` will be created automatically.
 
-## Prasyarat Runtime
+## Runtime Requirements
 
 - Go 1.24+
-- `swag` tersedia di PATH (kalau `Swag.Enabled=true`)
+- `swag` available in PATH (if `Swag.Enabled=true`)
 - Node.js + `npx` (default converter mode)
 
 Install `swag`:
@@ -46,17 +46,17 @@ Install `swag`:
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
-## Contoh Pemakaian
+## Usage Examples
 
-### One-call (direkomendasikan untuk dipakai dari aplikasi lain)
+### One-call (recommended for use from other applications)
 
-Gunakan `GenerateAuto` jika Anda ingin package yang mengatur semuanya.
+Use `GenerateAuto` if you want the package to handle everything automatically.
 
-Perilaku otomatis:
+Automatic behavior:
 
-- package akan mencoba generate Swagger dulu (pakai `swag` binary kalau ada, atau fallback `go run github.com/swaggo/swag/cmd/swag@latest`)
-- jika generate Swagger gagal, package akan fallback ke file OpenAPI yang sudah ada di `docs/`
-- kalau keduanya tidak ada, baru return error
+- package will try to generate Swagger first (using `swag` binary if available, or fallback to `go run github.com/swaggo/swag/cmd/swag@latest`)
+- if Swagger generation fails, package will fallback to existing OpenAPI files in `docs/`
+- if neither exists, only then return error
 
 ```go
 package main
@@ -81,7 +81,7 @@ func main() {
 }
 ```
 
-Jika OpenAPI Anda ada di lokasi custom, isi `SwaggerInputPath`:
+If your OpenAPI is in a custom location, set `SwaggerInputPath`:
 
 ```go
 err := postmangen.GenerateAuto(context.Background(), postmangen.AutoConfig{
@@ -128,9 +128,9 @@ func main() {
 }
 ```
 
-## Mode Tanpa Swag
+## Mode Without Swag
 
-Kalau swagger file sudah ada, nonaktifkan `Swag.Enabled` dan isi `SwaggerInputPath`.
+If swagger file already exists, disable `Swag.Enabled` and set `SwaggerInputPath`.
 
 ```go
 err := postmangen.Generate(context.Background(), postmangen.Config{
@@ -141,10 +141,10 @@ err := postmangen.Generate(context.Background(), postmangen.Config{
 })
 ```
 
-## Opsi Converter
+## Converter Options
 
-`Postman.Options` akan diteruskan ke flag `-O` converter.
-Contoh:
+`Postman.Options` will be passed to the converter's `-O` flag.
+Example:
 
 ```go
 Postman: postmangen.PostmanConfig{
@@ -155,9 +155,9 @@ Postman: postmangen.PostmanConfig{
 }
 ```
 
-## Catatan
+## Notes
 
-Kalau ingin pakai binary converter lokal (`openapi2postmanv2`) tanpa `npx`:
+If you want to use local converter binary (`openapi2postmanv2`) without `npx`:
 
 ```go
 Postman: postmangen.PostmanConfig{
