@@ -1,0 +1,106 @@
+basePath: /api/v1
+definitions:
+  api_routing_wule-endpoint.Limit:
+    properties:
+      id:
+        example: 1
+        type: integer
+      type:
+        example: daily
+        type: string
+      value:
+        example: 1000
+        type: integer
+    type: object
+  api_routing_wule-endpoint.User:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: WULE API untuk Limit Management System
+  title: WULE API untuk Limit Management System
+  version: "1.0"
+paths:
+  /api/v1/health:
+    get:
+      consumes:
+      - application/json
+      description: Check if API is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health check
+      tags:
+      - health
+  /api/v1/limits:
+    get:
+      consumes:
+      - application/json
+      description: Get limit management data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api_routing_wule-endpoint.Limit'
+            type: array
+      summary: Get limits
+      tags:
+      - limits
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api_routing_wule-endpoint.User'
+            type: array
+      summary: Get all users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/api_routing_wule-endpoint.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api_routing_wule-endpoint.User'
+      summary: Create user
+      tags:
+      - users
+swagger: "2.0"

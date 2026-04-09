@@ -513,9 +513,16 @@ func (g *Generator) findMainFile(workingDir string) string {
 		"server/main.go",
 		"service/main.go",
 		"cmd/service/main.go",
+		// Support for nested API structures
+		"api/routing/main.go",
+		"routing/main.go",
+		"src/main.go",
+		"internal/main.go",
 	}
 	
 	fmt.Printf("🔍 Auto-detecting main.go file...\n")
+	
+	// First check static candidates
 	for _, candidate := range candidates {
 		fullPath := filepath.Join(workingDir, candidate)
 		if g.fileExist(fullPath) {
@@ -525,8 +532,53 @@ func (g *Generator) findMainFile(workingDir string) string {
 		fmt.Printf("   ❌ Not found: %s\n", candidate)
 	}
 	
+	// Then check glob patterns for nested structures  
+	nestedPatterns := []string{
+		"api/routing/*/main.go",
+		"api/*/main.go", 
+		"routing/*/main.go",
+		"src/*/main.go",
+		"internal/*/main.go",
+	}
+	
+	for _, pattern := range nestedPatterns {
+		if matches := g.findMainFilesByPattern(workingDir, pattern); len(matches) > 0 {
+			candidate := matches[0] // Use first match
+			fmt.Printf("✅ Found main.go at: %s\n", candidate)
+			return candidate
+		}
+		fmt.Printf("   ❌ Not found: %s\n", pattern)
+	}
+	
 	fmt.Printf("⚠️  Main.go not found in common locations.\n")
 	return ""
+}
+
+// findMainFilesByPattern searches for main.go files using glob patterns
+func (g *Generator) findMainFilesByPattern(workingDir, pattern string) []string {
+	// Convert pattern to actual glob pattern
+	globPattern := filepath.Join(workingDir, pattern)
+	
+	matches, err := filepath.Glob(globPattern)
+	if err != nil {
+		return nil
+	}
+	
+	var validMatches []string
+	for _, match := range matches {
+		// Convert absolute path back to relative
+		relPath, err := filepath.Rel(workingDir, match)
+		if err != nil {
+			continue
+		}
+		
+		// Check if file actually exists and is main.go
+		if g.fileExist(match) && filepath.Base(match) == "main.go" {
+			validMatches = append(validMatches, relPath)
+		}
+	}
+	
+	return validMatches
 }
 
 // getSwaggerCandidates returns potential swagger file locations
