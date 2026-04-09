@@ -1,12 +1,12 @@
 {
   "event": [],
   "info": {
-    "_postman_id": "b2016b82-17eb-430d-8607-079e7287047b",
+    "_postman_id": "c86c8890-61eb-4486-87b2-7a5665907a0d",
     "description": {
       "content": "Sample API for demonstrating autogenpostman package",
       "type": "text/plain"
     },
-    "name": "Test API",
+    "name": "API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -15,7 +15,7 @@
       "item": [
         {
           "event": [],
-          "id": "db22171d-74f5-461d-ac84-87f5388cec9a",
+          "id": "c8205158-6a7a-4185-8b18-ad4b798bfdb5",
           "name": "Health check",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -55,7 +55,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "e510aaad-929c-4477-bb55-f972861ecd72",
+              "id": "af81511b-1b0f-42d7-90c1-878f95c10aec",
               "name": "OK",
               "originalRequest": {
                 "body": {},
@@ -89,7 +89,7 @@
       "item": [
         {
           "event": [],
-          "id": "e40ecb44-87a2-473c-beae-66c7fc0b5791",
+          "id": "dc0634ae-46d1-43e9-b46e-ceaf31686e94",
           "name": "List users",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -129,7 +129,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "d5625fdf-8cae-4715-862b-f152f4256c47",
+              "id": "ba5fd6c2-417a-49fe-85a8-54abe83e8d73",
               "name": "OK",
               "originalRequest": {
                 "body": {},
@@ -157,7 +157,7 @@
         },
         {
           "event": [],
-          "id": "def2fab3-44aa-4535-8604-39e0da033fcf",
+          "id": "fa696f6f-e7d9-428c-bffa-86454170ac6d",
           "name": "Create a user",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -210,7 +210,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "1bd3e73e-f2ab-4d1b-bfbc-47f116985981",
+              "id": "d25d637b-cfe0-4c55-b6f4-1cee980e89f1",
               "name": "Created",
               "originalRequest": {
                 "body": {
@@ -251,7 +251,7 @@
         },
         {
           "event": [],
-          "id": "fb475da1-dcda-4384-a6b7-83bd948746e8",
+          "id": "d15d67d5-ccdf-4ef5-8259-d4099e387ab6",
           "name": "Get a user",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -303,7 +303,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "ffdb91d8-5ee2-49e3-a1cf-b0d6c2d929fd",
+              "id": "70f6fa8d-37be-4243-8d6f-fc1fea1504f4",
               "name": "OK",
               "originalRequest": {
                 "body": {},

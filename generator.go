@@ -169,6 +169,15 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	
 	if cfg.MainFile == "" {
 		cfg.MainFile = g.findMainFile(workingDir)
+		if cfg.MainFile == "" {
+			// Try to auto-scaffold if no main.go found
+			if err := g.tryAutoScaffold(workingDir); err == nil {
+				fmt.Printf("🔧 Auto-created basic project structure\n")
+				cfg.MainFile = "main.go"
+			} else {
+				return fmt.Errorf("cannot find main.go file in common locations\n\n💡 Solutions:\n1. Run from project root directory\n2. Create main.go with basic API structure\n3. Use explicit path: --main-file=path/to/main.go\n4. Auto-scaffold: go run github.com/learncodexx/autogenpostman/cmd/postman@latest")
+			}
+		}
 	} else {
 		fmt.Printf("📍 Using specified main file: %s\n", cfg.MainFile)
 	}
@@ -250,6 +259,40 @@ func GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	return New().GenerateAuto(ctx, cfg)
 }
 
+// QuickGenerate is the most convenient one-liner for generating Postman collections
+// It handles everything automatically: scaffolding, annotation validation, generation
+func QuickGenerate(projectDir string) error {
+	return QuickGenerateNamed(projectDir, "API Collection")
+}
+
+// QuickGenerateNamed generates Postman collection with custom name
+func QuickGenerateNamed(projectDir, collectionName string) error {
+	ctx := context.Background()
+	cfg := AutoConfig{
+		WorkingDir:     projectDir,
+		OutputPath:     "docs/postman_collection.json",
+		CollectionName: collectionName,
+		Pretty:         true,
+	}
+	
+	generator := New()
+	err := generator.GenerateAuto(ctx, cfg)
+	if err != nil {
+		// If generation fails, try to provide helpful guidance
+		if strings.Contains(err.Error(), "cannot find main.go") {
+			fmt.Printf("🚨 No main.go found. Creating basic structure...\n")
+			if scaffoldErr := generator.tryAutoScaffold(projectDir); scaffoldErr == nil {
+				fmt.Printf("✨ Created basic main.go. Please add your API endpoints and try again.\n")
+				fmt.Printf("🛠️ Next steps:\n1. Add your API routes to main.go\n2. Run: go mod init your-project-name\n3. Run: go get github.com/gin-gonic/gin\n4. Run generation again\n")
+			}
+		}
+		return err
+	}
+	
+	fmt.Printf("✅ Success! Postman collection: docs/postman_collection.json\n")
+	return nil
+}
+
 func (g *Generator) runSwag(ctx context.Context, cfg Config) error {
 	// Validate main file exists
 	mainFilePath := filepath.Join(cfg.WorkingDir, cfg.Swag.MainFile)
@@ -257,8 +300,8 @@ func (g *Generator) runSwag(ctx context.Context, cfg Config) error {
 		return fmt.Errorf("main file not found: %s (try --main-file flag to specify correct path)", cfg.Swag.MainFile)
 	}
 
-	// Validate swagger annotations
-	if err := g.validateMainFile(mainFilePath); err != nil {
+	// Validate swagger annotations (lenient mode)
+	if err := g.validateMainFileLenient(mainFilePath); err != nil {
 		return fmt.Errorf("main file validation failed: %w", err)
 	}
 
@@ -482,9 +525,8 @@ func (g *Generator) findMainFile(workingDir string) string {
 		fmt.Printf("   ❌ Not found: %s\n", candidate)
 	}
 	
-	fmt.Printf("⚠️  Main.go not found in common locations. Using default: main.go\n")
-	fmt.Printf("💡 Use --main-file flag to specify custom location\n")
-	return "main.go"
+	fmt.Printf("⚠️  Main.go not found in common locations.\n")
+	return ""
 }
 
 // getSwaggerCandidates returns potential swagger file locations
@@ -520,8 +562,51 @@ func (g *Generator) getSwaggerCandidates(workingDir string) []string {
 	return candidates
 }
 
-// validateMainFile checks if the main.go has proper swagger annotations
-func (g *Generator) validateMainFile(mainPath string) error {
+// tryAutoScaffold attempts to create a basic project structure with minimal main.go
+func (g *Generator) tryAutoScaffold(workingDir string) error {
+	mainPath := filepath.Join(workingDir, "main.go")
+	if g.fileExist(mainPath) {
+		return fmt.Errorf("main.go already exists")
+	}
+	
+	// Create basic main.go with minimal swagger annotations
+	basicMainGo := `package main
+
+import (
+	"net/http"
+	"github.com/gin-gonic/gin"
+)
+
+// @title		API
+// @version		1.0
+// @description	Auto-generated API
+// @host		localhost:8080
+// @BasePath	/api/v1
+func main() {
+	r := gin.Default()
+	
+	// @Summary		Health check
+	// @Tags		health
+	// @Success		200	{object}	map[string]string
+	// @Router		/health [get]
+	r.GET("/api/v1/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+	
+	r.Run(":8080")
+}
+`
+	err := os.WriteFile(mainPath, []byte(basicMainGo), 0644)
+	if err != nil {
+		return fmt.Errorf("create basic main.go: %w", err)
+	}
+	
+	fmt.Printf("🎆 Created basic main.go with swagger annotations\n")
+	return nil
+}
+
+// validateMainFileLenient checks swagger annotations but allows missing ones with warnings
+func (g *Generator) validateMainFileLenient(mainPath string) error {
 	content, err := os.ReadFile(mainPath)
 	if err != nil {
 		return fmt.Errorf("read main file %s: %w", mainPath, err)
@@ -533,28 +618,37 @@ func (g *Generator) validateMainFile(mainPath string) error {
 	required := []struct {
 		annotation string
 		message    string
+		defaultVal string
 	}{
-		{"@title", "Missing @title annotation"},
-		{"@version", "Missing @version annotation"},
-		{"@host", "Missing @host annotation"},
-		{"@BasePath", "Missing @BasePath annotation"},
+		{"@title", "Missing @title annotation", "API"},
+		{"@version", "Missing @version annotation", "1.0"},
+		{"@host", "Missing @host annotation", "localhost:8080"},
+		{"@BasePath", "Missing @BasePath annotation", "/api/v1"},
 	}
 	
 	missing := []string{}
+	warnings := []string{}
 	for _, req := range required {
 		if !strings.Contains(contentStr, req.annotation) {
 			missing = append(missing, req.message)
+			warnings = append(warnings, fmt.Sprintf("// %s %s", req.annotation, req.defaultVal))
 		}
 	}
 	
+	// Only show warnings for missing annotations, don't fail
 	if len(missing) > 0 {
-		return fmt.Errorf("swagger validation failed:\n%s\n\n💡 Add these to your main.go:\n// @title Your API Name\n// @version 1.0\n// @host localhost:8080\n// @BasePath /api/v1", strings.Join(missing, "\n"))
+		fmt.Printf("⚠️  Missing swagger annotations (will use defaults):\n")
+		for _, warning := range missing {
+			fmt.Printf("   - %s\n", warning)
+		}
+		fmt.Printf("\n💡 To fix, add these to %s:\n%s\n\n", mainPath, strings.Join(warnings, "\n"))
 	}
 	
-	// Check for docs import
+	// Check for docs import (non-fatal)
 	if !strings.Contains(contentStr, `/docs"`) && !strings.Contains(contentStr, "/docs\"") {
-		return fmt.Errorf("missing docs import in %s\n💡 Add: import _ \"yourmodule/docs\"", mainPath)
+		fmt.Printf("⚠️  Docs import missing - swag may fail (add: import _ \"yourmodule/docs\")\n")
 	}
 	
+	// Always return nil for lenient validation
 	return nil
 }

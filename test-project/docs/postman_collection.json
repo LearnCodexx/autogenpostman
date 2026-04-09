@@ -1,0 +1,19 @@
+{
+  "event": [],
+  "info": {
+    "_postman_id": "5c6e639e-06f3-4fbd-972c-751786266702",
+    "description": {
+      "content": "Auto-generated API",
+      "type": "text/plain"
+    },
+    "name": "API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "//localhost:8080/api/v1"
+    }
+  ]
+}

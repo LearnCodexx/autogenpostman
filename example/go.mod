@@ -18,6 +18,7 @@ require (
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
+	github.com/learncodexx/autogenpostman v0.0.0-00010101000000-000000000000 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	golang.org/x/tools v0.41.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
