@@ -160,29 +160,25 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	}
 
 	if cfg.OutputPath == "" {
-		cfg.OutputPath = "postman_collection.json"
+		cfg.OutputPath = filepath.Join("cmd", "postman", "postman_collection.json")
 	}
 	if cfg.MainFile == "" {
 		cfg.MainFile = "cmd/main.go"
 	}
-	temporarySwagDir := ""
 	if cfg.SwagOutputDir == "" {
-		tmpDir, err := os.MkdirTemp("", "postman-swag-*")
-		if err != nil {
-			return fmt.Errorf("create temp swag output dir: %w", err)
+		// Use cmd/postman as default instead of temporary directory
+		cfg.SwagOutputDir = filepath.Join(workingDir, "cmd", "postman")
+		// Create the directory if it doesn't exist
+		if err := os.MkdirAll(cfg.SwagOutputDir, 0755); err != nil {
+			return fmt.Errorf("create swag output dir: %w", err)
 		}
-		temporarySwagDir = tmpDir
-		cfg.SwagOutputDir = tmpDir
-	}
-	if temporarySwagDir != "" {
-		defer os.RemoveAll(temporarySwagDir)
 	}
 	if len(cfg.SwaggerCandidates) == 0 {
 		cfg.SwaggerCandidates = []string{
-			filepath.Join("docs", "swagger.json"),
-			filepath.Join("docs", "openapi.yaml"),
-			filepath.Join("docs", "openapi.yml"),
-			filepath.Join("docs", "openapi-user.yaml"),
+			filepath.Join("cmd", "postman", "swagger.json"),
+			filepath.Join("cmd", "postman", "openapi.yaml"),
+			filepath.Join("cmd", "postman", "openapi.yml"),
+			filepath.Join("cmd", "postman", "openapi-user.yaml"),
 		}
 	}
 	lowLevelCfg := Config{
