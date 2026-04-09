@@ -28,7 +28,7 @@ info:
   title: Example API
   version: "1.0"
 paths:
-  /health:
+  /api/v1/health:
     get:
       responses:
         "200":
@@ -38,7 +38,7 @@ paths:
       summary: Health check
       tags:
       - health
-  /users:
+  /api/v1/users:
     get:
       responses:
         "200":
@@ -66,7 +66,7 @@ paths:
       summary: Create a user
       tags:
       - users
-  /users/{id}:
+  /api/v1/users/{id}:
     get:
       parameters:
       - description: User ID

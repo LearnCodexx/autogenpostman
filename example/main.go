@@ -49,7 +49,7 @@ func main() {
 // @Summary      Health check
 // @Tags         health
 // @Success      200  {object}  HealthResponse
-// @Router       /health [get]
+// @Router       /api/v1/health [get]
 func healthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, HealthResponse{
 		Status:  "ok",
@@ -60,7 +60,7 @@ func healthCheck(c *gin.Context) {
 // @Summary      List users
 // @Tags         users
 // @Success      200  {array}   User
-// @Router       /users [get]
+// @Router       /api/v1/users [get]
 func getUsers(c *gin.Context) {
 	users := []User{
 		{ID: 1, Name: "John Doe", Email: "john@example.com"},
@@ -73,7 +73,7 @@ func getUsers(c *gin.Context) {
 // @Tags         users
 // @Param        id   path      int  true  "User ID"
 // @Success      200  {object}  User
-// @Router       /users/{id} [get]
+// @Router       /api/v1/users/{id} [get]
 func getUserByID(c *gin.Context) {
 	id := c.Param("id")
 	if id == "1" {
@@ -93,7 +93,7 @@ func getUserByID(c *gin.Context) {
 // @Tags         users
 // @Param        user  body      User  true  "User data"
 // @Success      201   {object}  User
-// @Router       /users [post]
+// @Router       /api/v1/users [post]
 func createUser(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {

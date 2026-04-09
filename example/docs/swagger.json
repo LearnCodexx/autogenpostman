@@ -9,7 +9,7 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/health": {
+        "/api/v1/health": {
             "get": {
                 "tags": [
                     "health"
@@ -25,7 +25,7 @@
                 }
             }
         },
-        "/users": {
+        "/api/v1/users": {
             "get": {
                 "tags": [
                     "users"
@@ -69,7 +69,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/api/v1/users/{id}": {
             "get": {
                 "tags": [
                     "users"

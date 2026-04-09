@@ -1,7 +1,7 @@
 {
   "event": [],
   "info": {
-    "_postman_id": "c86c8890-61eb-4486-87b2-7a5665907a0d",
+    "_postman_id": "c48b7675-87d4-403c-a3be-de2f9af137d0",
     "description": {
       "content": "Sample API for demonstrating autogenpostman package",
       "type": "text/plain"
@@ -15,7 +15,7 @@
       "item": [
         {
           "event": [],
-          "id": "c8205158-6a7a-4185-8b18-ad4b798bfdb5",
+          "id": "a395e2da-78f3-4c0b-97b5-b78e2370ac79",
           "name": "Health check",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -37,6 +37,8 @@
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
+                "v1",
                 "health"
               ],
               "query": [],
@@ -55,7 +57,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "af81511b-1b0f-42d7-90c1-878f95c10aec",
+              "id": "833c7573-89f2-42d5-a521-16bf1f1d172e",
               "name": "OK",
               "originalRequest": {
                 "body": {},
@@ -71,6 +73,8 @@
                     "{{baseUrl}}"
                   ],
                   "path": [
+                    "api",
+                    "v1",
                     "health"
                   ],
                   "query": [],
@@ -89,7 +93,7 @@
       "item": [
         {
           "event": [],
-          "id": "dc0634ae-46d1-43e9-b46e-ceaf31686e94",
+          "id": "9d8cb888-39a7-4926-9182-8a29e0e147c7",
           "name": "List users",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -111,6 +115,8 @@
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
+                "v1",
                 "users"
               ],
               "query": [],
@@ -129,7 +135,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "ba5fd6c2-417a-49fe-85a8-54abe83e8d73",
+              "id": "3d2999bb-b317-4750-8125-05ca6aca27d6",
               "name": "OK",
               "originalRequest": {
                 "body": {},
@@ -145,6 +151,8 @@
                     "{{baseUrl}}"
                   ],
                   "path": [
+                    "api",
+                    "v1",
                     "users"
                   ],
                   "query": [],
@@ -157,7 +165,7 @@
         },
         {
           "event": [],
-          "id": "fa696f6f-e7d9-428c-bffa-86454170ac6d",
+          "id": "60bb8f73-eaa1-4040-8af2-0801e300c4ea",
           "name": "Create a user",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -192,6 +200,8 @@
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
+                "v1",
                 "users"
               ],
               "query": [],
@@ -210,7 +220,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "d25d637b-cfe0-4c55-b6f4-1cee980e89f1",
+              "id": "910d026f-5f98-46fc-b836-c6a17ddad028",
               "name": "Created",
               "originalRequest": {
                 "body": {
@@ -239,6 +249,8 @@
                     "{{baseUrl}}"
                   ],
                   "path": [
+                    "api",
+                    "v1",
                     "users"
                   ],
                   "query": [],
@@ -251,7 +263,7 @@
         },
         {
           "event": [],
-          "id": "d15d67d5-ccdf-4ef5-8259-d4099e387ab6",
+          "id": "bf08e620-0b0a-4863-a72b-eb0ec57e8892",
           "name": "Get a user",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -273,6 +285,8 @@
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
+                "v1",
                 "users",
                 ":id"
               ],
@@ -303,7 +317,7 @@
                   "value": "*/*"
                 }
               ],
-              "id": "70f6fa8d-37be-4243-8d6f-fc1fea1504f4",
+              "id": "17605523-ad43-4c7a-bd7c-3acf169c0da4",
               "name": "OK",
               "originalRequest": {
                 "body": {},
@@ -319,6 +333,8 @@
                     "{{baseUrl}}"
                   ],
                   "path": [
+                    "api",
+                    "v1",
                     "users",
                     ":id"
                   ],
