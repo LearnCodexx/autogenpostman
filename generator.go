@@ -232,6 +232,199 @@ func (g *Generator) GenerateWithRouteDiscovery(ctx context.Context, cfg AutoConf
 	return nil
 }
 
+// generateSwaggerFromDiscoveredRoutes generates OpenAPI spec from discovered routes and models
+func (g *Generator) generateSwaggerFromDiscoveredRoutes(routes []DiscoveredRoute, models []DiscoveredModel, outputPath string, cfg AutoConfig) error {
+	swagger := map[string]interface{}{
+		"openapi": "3.0.0",
+		"info": map[string]interface{}{
+			"title":       "Auto-Generated API",
+			"version":     "1.0.0",
+			"description": "API documentation generated from route discovery",
+		},
+		"servers": []map[string]interface{}{
+			{
+				"url":         "http://localhost:8080",
+				"description": "Development server",
+			},
+		},
+		"paths":      make(map[string]interface{}),
+		"components": map[string]interface{}{
+			"schemas": g.generateSchemas(models),
+			"securitySchemes": map[string]interface{}{
+				"BearerAuth": map[string]interface{}{
+					"type":         "http",
+					"scheme":       "bearer",
+					"bearerFormat": "JWT",
+				},
+			},
+		},
+	}
+	
+	// Group routes by path
+	pathGroups := make(map[string][]DiscoveredRoute)
+	for _, route := range routes {
+		pathGroups[route.Path] = append(pathGroups[route.Path], route)
+	}
+	
+	paths := make(map[string]interface{})
+	for path, pathRoutes := range pathGroups {
+		pathSpec := make(map[string]interface{})
+		
+		for _, route := range pathRoutes {
+			methodSpec := map[string]interface{}{
+				"summary":     route.Summary,
+				"description": route.Description,
+				"tags":        route.Tags,
+				"responses": map[string]interface{}{
+					"200": map[string]interface{}{
+						"description": "Successful response",
+						"content": map[string]interface{}{
+							"application/json": map[string]interface{}{
+								"schema": map[string]interface{}{
+									"type": "object",
+								},
+							},
+						},
+					},
+					"400": map[string]interface{}{
+						"description": "Bad request",
+					},
+					"500": map[string]interface{}{
+						"description": "Internal server error",
+					},
+				},
+			}
+			
+			// Add authentication if required
+			if route.Auth {
+				methodSpec["security"] = []map[string]interface{}{
+					{"BearerAuth": []string{}},
+				}
+				methodSpec["responses"].(map[string]interface{})["401"] = map[string]interface{}{
+					"description": "Unauthorized",
+				}
+			}
+			
+			// Add request body for POST/PUT/PATCH
+			if route.Method == "POST" || route.Method == "PUT" || route.Method == "PATCH" {
+				methodSpec["requestBody"] = map[string]interface{}{
+					"required": true,
+					"content": map[string]interface{}{
+						"application/json": map[string]interface{}{
+							"schema": g.inferRequestSchema(route, models),
+						},
+					},
+				}
+			}
+			
+			pathSpec[strings.ToLower(route.Method)] = methodSpec
+		}
+		
+		paths[path] = pathSpec
+	}
+	
+	swagger["paths"] = paths
+	
+	// Write to file
+	jsonBytes, err := json.MarshalIndent(swagger, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal swagger: %w", err)
+	}
+	
+	if err := os.WriteFile(outputPath, jsonBytes, 0644); err != nil {
+		return fmt.Errorf("write swagger file: %w", err) 
+	}
+	
+	return nil
+}
+
+// generateSchemas creates OpenAPI schemas from discovered models
+func (g *Generator) generateSchemas(models []DiscoveredModel) map[string]interface{} {
+	schemas := make(map[string]interface{})
+	
+	for _, model := range models {
+		properties := make(map[string]interface{})
+		required := []string{}
+		
+		for _, field := range model.Fields {
+			fieldSchema := map[string]interface{}{
+				"type": g.mapGoTypeToOpenAPI(field.Type),
+			}
+			
+			// Use JSON tag name if available, otherwise use field name
+			fieldName := field.Name
+			if field.JsonTag != "" && field.JsonTag != "-" {
+				// Handle json:"name,omitempty" format
+				jsonName := strings.Split(field.JsonTag, ",")[0]
+				if jsonName != "" {
+					fieldName = jsonName
+				}
+			}
+			
+			properties[fieldName] = fieldSchema
+			
+			if field.Required {
+				required = append(required, fieldName)
+			}
+		}
+		
+		schema := map[string]interface{}{
+			"type":       "object",
+			"properties": properties,
+		}
+		
+		if len(required) > 0 {
+			schema["required"] = required
+		}
+		
+		schemas[model.Name] = schema
+	}
+	
+	return schemas
+}
+
+// inferRequestSchema tries to infer the request schema for a route
+func (g *Generator) inferRequestSchema(route DiscoveredRoute, models []DiscoveredModel) map[string]interface{} {
+	// Try to match handler name with model names
+	handlerLower := strings.ToLower(route.Handler)
+	
+	for _, model := range models {
+		modelLower := strings.ToLower(model.Name)
+		if strings.Contains(handlerLower, modelLower) || strings.Contains(modelLower, "dto") {
+			return map[string]interface{}{
+				"$ref": fmt.Sprintf("#/components/schemas/%s", model.Name),
+			}
+		}
+	}
+	
+	// Default generic schema
+	return map[string]interface{}{
+		"type": "object",
+		"additionalProperties": true,
+	}
+}
+
+// mapGoTypeToOpenAPI maps Go types to OpenAPI types
+func (g *Generator) mapGoTypeToOpenAPI(goType string) string {
+	// Remove pointer indicators
+	goType = strings.TrimPrefix(goType, "*")
+	goType = strings.TrimPrefix(goType, "[]")
+	
+	switch goType {
+	case "string":
+		return "string"
+	case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64":
+		return "integer"
+	case "float32", "float64":
+		return "number"
+	case "bool":
+		return "boolean"
+	default:
+		// For custom types or unknown types
+		return "string"
+	}
+}
+
 // GenerateWithRouteDiscovery is a package-level convenience API for route discovery
 func GenerateWithRouteDiscovery(ctx context.Context, cfg AutoConfig) error {
 	return New().GenerateWithRouteDiscovery(ctx, cfg)
@@ -959,238 +1152,4 @@ func (g *Generator) validateMainFileLenient(mainPath string) error {
 
 	// Always return nil for lenient validation
 	return nil
-}
-
-// generateSwaggerFromDiscoveredRoutes creates OpenAPI/Swagger spec from discovered routes
-func (g *Generator) generateSwaggerFromDiscoveredRoutes(routes []DiscoveredRoute, models []DiscoveredModel, outputPath string, cfg AutoConfig) error {
-	fmt.Printf("📝 Generating swagger from %d discovered routes...\n", len(routes))
-	
-	// Create OpenAPI 2.0 spec structure
-	swagger := map[string]interface{}{
-		"swagger": "2.0",
-		"info": map[string]interface{}{
-			"title":       "Auto-Discovered API",
-			"version":     "1.0.0",
-			"description": fmt.Sprintf("API automatically generated from %d discovered routes", len(routes)),
-		},
-		"host":                "localhost:8080",
-		"basePath":            "/api/v1",
-		"schemes":             []string{"http", "https"},
-		"consumes":            []string{"application/json"},
-		"produces":            []string{"application/json"},
-		"paths":               make(map[string]interface{}),
-		"definitions":         make(map[string]interface{}),
-		"securityDefinitions": make(map[string]interface{}),
-	}
-	
-	// Add security definitions if any routes require auth
-	hasAuth := false
-	for _, route := range routes {
-		if route.Auth {
-			hasAuth = true
-			break
-		}
-	}
-	
-	if hasAuth {
-		swagger["securityDefinitions"] = map[string]interface{}{
-			"BearerAuth": map[string]interface{}{
-				"type":        "apiKey",
-				"name":        "Authorization",
-				"in":          "header",
-				"description": "JWT Authorization header using Bearer scheme",
-			},
-		}
-	}
-	
-	// Generate paths from routes
-	paths := swagger["paths"].(map[string]interface{})
-	for _, route := range routes {
-		if paths[route.Path] == nil {
-			paths[route.Path] = make(map[string]interface{})
-		}
-		
-		pathObj := paths[route.Path].(map[string]interface{})
-		
-		// Create operation object
-		operation := map[string]interface{}{
-			"summary":     route.Summary,
-			"description": route.Description,
-			"tags":        route.Tags,
-			"operationId": g.generateOperationId(route),
-			"responses":   g.generateResponses(route),
-		}
-		
-		// Add security if required
-		if route.Auth {
-			operation["security"] = []map[string]interface{}{
-				{"BearerAuth": []string{}},
-			}
-		}
-		
-		// Add request parameters/body based on method
-		if route.Method == "POST" || route.Method == "PUT" || route.Method == "PATCH" {
-			operation["parameters"] = []map[string]interface{}{
-				{
-					"in":          "body",
-					"name":        "body",
-					"description": "Request body",
-					"schema": map[string]interface{}{
-						"type": "object",
-					},
-				},
-			}
-		}
-		
-		pathObj[strings.ToLower(route.Method)] = operation
-	}
-	
-	// Generate definitions from models
-	definitions := swagger["definitions"].(map[string]interface{})
-	for _, model := range models {
-		properties := make(map[string]interface{})
-		required := []string{}
-		
-		for _, field := range model.Fields {
-			jsonName := field.JsonTag
-			if jsonName == "" {
-				jsonName = field.Name
-			}
-			
-			properties[jsonName] = map[string]interface{}{
-				"type":        g.convertGoTypeToSwagger(field.Type),
-				"description": fmt.Sprintf("%s field", field.Name),
-			}
-			
-			if field.Required {
-				required = append(required, jsonName)
-			}
-		}
-		
-		modelDef := map[string]interface{}{
-			"type":        "object",
-			"properties":  properties,
-			"description": fmt.Sprintf("Model: %s", model.Name),
-		}
-		
-		if len(required) > 0 {
-			modelDef["required"] = required
-		}
-		
-		definitions[model.Name] = modelDef
-	}
-	
-	// Add common response models
-	definitions["ResponseDto"] = map[string]interface{}{
-		"type": "object",
-		"properties": map[string]interface{}{
-			"code": map[string]interface{}{
-				"type":        "integer",
-				"description": "Response code",
-			},
-			"message": map[string]interface{}{
-				"type":        "string", 
-				"description": "Response message",
-			},
-			"data": map[string]interface{}{
-				"type":        "object",
-				"description": "Response data",
-			},
-		},
-	}
-	
-	definitions["ErrorResponse"] = map[string]interface{}{
-		"type": "object",
-		"properties": map[string]interface{}{
-			"error": map[string]interface{}{
-				"type":        "string",
-				"description": "Error message",
-			},
-			"code": map[string]interface{}{
-				"type":        "integer", 
-				"description": "Error code",
-			},
-		},
-	}
-	
-	// Write to file
-	file, err := os.Create(outputPath)
-	if err != nil {
-		return fmt.Errorf("create swagger file: %w", err)
-	}
-	defer file.Close()
-	
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(swagger); err != nil {
-		return fmt.Errorf("encode swagger JSON: %w", err)
-	}
-	
-	fmt.Printf("✅ Swagger generated: %s (%d paths, %d definitions)\n", outputPath, len(paths), len(definitions))
-	return nil
-}
-
-// Helper methods for swagger generation
-
-func (g *Generator) generateOperationId(route DiscoveredRoute) string {
-	method := strings.ToLower(route.Method)
-	pathParts := strings.Split(strings.Trim(route.Path, "/"), "/")
-	
-	if len(pathParts) > 0 {
-		resource := pathParts[0]
-		return fmt.Sprintf("%s%s", method, strings.Title(resource))
-	}
-	
-	return fmt.Sprintf("%sOperation", method)
-}
-
-func (g *Generator) generateResponses(route DiscoveredRoute) map[string]interface{} {
-	responses := map[string]interface{}{
-		"200": map[string]interface{}{
-			"description": "Success",
-			"schema": map[string]interface{}{
-				"$ref": "#/definitions/ResponseDto",
-			},
-		},
-		"400": map[string]interface{}{
-			"description": "Bad Request",
-			"schema": map[string]interface{}{
-				"$ref": "#/definitions/ErrorResponse",
-			},
-		},
-		"500": map[string]interface{}{
-			"description": "Internal Server Error", 
-			"schema": map[string]interface{}{
-				"$ref": "#/definitions/ErrorResponse",
-			},
-		},
-	}
-	
-	if route.Auth {
-		responses["401"] = map[string]interface{}{
-			"description": "Unauthorized",
-			"schema": map[string]interface{}{
-				"$ref": "#/definitions/ErrorResponse",
-			},
-		}
-	}
-	
-	return responses
-}
-
-func (g *Generator) convertGoTypeToSwagger(goType string) string {
-	switch {
-	case strings.HasPrefix(goType, "[]"):
-		return "array"
-	case goType == "string":
-		return "string"
-	case goType == "int" || goType == "int64" || goType == "int32":
-		return "integer"
-	case goType == "bool":
-		return "boolean"
-	case goType == "float64" || goType == "float32":
-		return "number"
-	default:
-		return "string"
-	}
 }

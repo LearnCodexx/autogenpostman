@@ -99,17 +99,32 @@ func (rs *RouteScanner) scanFile(filePath string) error {
 	
 	lines := strings.Split(string(content), "\n")
 	
-	// Scan for different route patterns
-	rs.scanFiberRoutes(lines, filePath)
-	rs.scanGinRoutes(lines, filePath)
-	rs.scanEchoRoutes(lines, filePath)
-	rs.scanMuxRoutes(lines, filePath)
-	rs.scanGenericRoutes(lines, filePath)
+	// Scan for different route patterns - prioritize group-based scanning for Fiber
+	if rs.containsFiberGroups(lines) {
+		// For files with Fiber groups, use group-aware scanning only
+		rs.scanFiberGroupRoutes(lines, filePath)
+	} else {
+		// For other patterns, use traditional scanning
+		rs.scanGinRoutes(lines, filePath)
+		rs.scanEchoRoutes(lines, filePath)
+		rs.scanMuxRoutes(lines, filePath)
+		rs.scanGenericRoutes(lines, filePath)
+	}
 	
-	// Scan for models/DTOs
+	// Always scan for models
 	rs.scanModels(lines, filePath)
 	
 	return nil
+}
+
+// containsFiberGroups checks if file contains Fiber group patterns
+func (rs *RouteScanner) containsFiberGroups(lines []string) bool {
+	for _, line := range lines {
+		if strings.Contains(line, ".Group(") {
+			return true
+		}
+	}
+	return false
 }
 
 // scanFiberRoutes scans for Fiber framework routes
@@ -122,15 +137,19 @@ func (rs *RouteScanner) scanFiberRoutes(lines []string, filePath string) {
 		`app\.Delete\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`: "DELETE",
 		`app\.Patch\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:  "PATCH",
 		
-		// Group calls (e.g., users.Post)
-		`\w+\.Get\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:    "GET",
-		`\w+\.Post\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:   "POST",
-		`\w+\.Put\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:    "PUT",
-		`\w+\.Delete\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`: "DELETE",
-		`\w+\.Patch\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:  "PATCH",
+		// Group calls (e.g., users.Post, userGet.Post)
+		`(\w+)\.Get\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:    "GET",
+		`(\w+)\.Post\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:   "POST",
+		`(\w+)\.Put\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:    "PUT",
+		`(\w+)\.Delete\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`: "DELETE",
+		`(\w+)\.Patch\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\)`:  "PATCH",
 	}
 	
+	// Scan for direct route patterns first
 	rs.scanWithPatterns(patterns, lines, filePath, "Fiber")
+	
+	// Then scan for group-based routes with context awareness
+	rs.scanFiberGroupRoutes(lines, filePath)
 }
 
 // scanGinRoutes scans for Gin framework routes
@@ -169,6 +188,85 @@ func (rs *RouteScanner) scanMuxRoutes(lines []string, filePath string) {
 	}
 	
 	rs.scanWithPatterns(patterns, lines, filePath, "Mux")
+}
+
+// scanFiberGroupRoutes scans for Fiber group-based routes with better context awareness
+func (rs *RouteScanner) scanFiberGroupRoutes(lines []string, filePath string) {
+	groupMap := make(map[string]string) // groupVar -> basePath
+	authGroupMap := make(map[string]bool) // groupVar -> hasAuth
+	
+	// First pass: Identify groups and their base paths
+	for i, line := range lines {
+		// Group definition pattern: users := app.Group("/users")
+		groupDefPattern := regexp.MustCompile(`(\w+)\s*:=\s*\w+\.Group\s*\(\s*\"([^\"]+)\"\s*\)`)
+		matches := groupDefPattern.FindStringSubmatch(line)
+		if len(matches) >= 3 {
+			groupVar := matches[1]
+			basePath := matches[2]
+			groupMap[groupVar] = basePath
+			fmt.Printf("   🔗 Found group: %s -> %s (%s:%d)\n", groupVar, basePath, filepath.Base(filePath), i+1)
+			
+			// Check if this group has authentication in nearby lines
+			authGroupMap[groupVar] = rs.detectGroupAuth(lines, i, groupVar)
+		}
+		
+		// Nested group pattern: userGet := users.Group("/get")
+		nestedGroupPattern := regexp.MustCompile(`(\w+)\s*:=\s*(\w+)\.Group\s*\(\s*\"([^\"]+)\"\s*\)`)
+		nestedMatches := nestedGroupPattern.FindStringSubmatch(line)
+		if len(nestedMatches) >= 4 {
+			nestedGroupVar := nestedMatches[1]
+			parentGroupVar := nestedMatches[2]
+			nestedPath := nestedMatches[3]
+			
+				if parentBasePath, exists := groupMap[parentGroupVar]; exists {
+					fullPath := rs.joinPaths(parentBasePath, nestedPath)
+					groupMap[nestedGroupVar] = fullPath
+					authGroupMap[nestedGroupVar] = authGroupMap[parentGroupVar] || rs.detectGroupAuth(lines, i, nestedGroupVar)
+					fmt.Printf("   🔗 Found nested group: %s -> %s (%s:%d)\n", nestedGroupVar, fullPath, filepath.Base(filePath), i+1)
+			}
+		}
+	}
+	
+	// Second pass: Find routes within identified groups
+	for i, line := range lines {
+		for groupVar, basePath := range groupMap {
+			// Look for group.Method patterns
+			pattern := regexp.MustCompile(groupVar + `\.(\w+)\s*\(\s*\"([^\"]+)\"\s*,\s*([^)]+)\)`)
+			matches := pattern.FindStringSubmatch(line)
+			
+			if len(matches) >= 4 {
+				method := strings.ToUpper(matches[1])
+				path := matches[2]
+				handler := rs.cleanHandler(matches[3])
+				
+				if !rs.isValidHTTPMethod(method) || rs.isUtilityMethod(method) {
+					continue
+				}
+				
+				fullPath := rs.joinPaths(basePath, path)
+				hasAuth := authGroupMap[groupVar] || rs.detectRouteAuth(lines, i)
+				
+				route := DiscoveredRoute{
+					Method:      method,
+					Path:        fullPath,
+					Handler:     handler,
+					File:        filePath,
+					LineNumber:  i + 1,
+					Summary:     rs.generateSummary(method, fullPath),
+					Description: rs.generateDescription(method, fullPath, handler),
+					Tags:        rs.extractTags(fullPath),
+					Auth:        hasAuth,
+				}
+				
+				rs.routes = append(rs.routes, route)
+				authIndicator := ""
+				if hasAuth {
+					authIndicator = " 🔐"
+				}
+				fmt.Printf("   📍 %s %s -> %s (%s:%d) [Fiber Group]%s\n", method, fullPath, handler, filepath.Base(filePath), i+1, authIndicator)
+			}
+		}
+	}
 }
 
 // scanGenericRoutes scans for generic route registration patterns
@@ -341,17 +439,91 @@ func (rs *RouteScanner) extractTags(path string) []string {
 
 func (rs *RouteScanner) detectAuth(lines []string, currentLine int) bool {
 	// Look around current line for auth indicators
-	start := max(0, currentLine-3)
-	end := min(len(lines)-1, currentLine+3)
+	start := max(0, currentLine-5)
+	end := min(len(lines)-1, currentLine+5)
 	
 	for i := start; i <= end; i++ {
 		line := strings.ToLower(lines[i])
-		if strings.Contains(line, "auth") || strings.Contains(line, "jwt") || 
-		   strings.Contains(line, "protected") || strings.Contains(line, "middleware") {
+		authKeywords := []string{"auth", "jwt", "protected", "middleware", "use(", "bearer", "token"}
+		for _, keyword := range authKeywords {
+			if strings.Contains(line, keyword) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// detectGroupAuth checks if a group has authentication middleware
+func (rs *RouteScanner) detectGroupAuth(lines []string, groupLine int, groupVar string) bool {
+	// Look for Use() calls on this group in following lines
+	for i := groupLine + 1; i < len(lines) && i < groupLine + 20; i++ {
+		line := lines[i]
+		// Check for groupVar.Use() patterns
+		usePattern := regexp.MustCompile(groupVar + `\.Use\s*\(\s*([^)]+)\s*\)`)
+		if usePattern.MatchString(line) {
+			// Check if the middleware suggests authentication
+			lowerLine := strings.ToLower(line)
+			authKeywords := []string{"jwt", "auth", "protected", "token", "bearer"}
+			for _, keyword := range authKeywords {
+				if strings.Contains(lowerLine, keyword) {
+					return true
+				}
+			}
+		}
+		
+		// Stop scanning if we hit another group definition or function
+		if strings.Contains(line, ":= ") && strings.Contains(line, ".Group(") {
+			break
+		}
+		if strings.Contains(line, "func ") {
+			break
+		}
+	}
+	return false
+}
+
+// detectRouteAuth checks for route-specific auth indicators
+func (rs *RouteScanner) detectRouteAuth(lines []string, routeLine int) bool {
+	// Check the route line itself and a few lines before/after
+	start := max(0, routeLine-3)
+	end := min(len(lines)-1, routeLine+3)
+	
+	for i := start; i <= end; i++ {
+		line := strings.ToLower(lines[i])
+		if strings.Contains(line, "jwt") || strings.Contains(line, "auth") || 
+		   strings.Contains(line, "protected") || strings.Contains(line, "use(") {
 			return true
 		}
 	}
 	return false
+}
+
+// isUtilityMethod checks if the method is a utility method (not HTTP method)
+func (rs *RouteScanner) isUtilityMethod(method string) bool {
+	utilityMethods := []string{"USE", "ALL", "STATIC", "GROUP"}
+	for _, util := range utilityMethods {
+		if method == util {
+			return true
+		}
+	}
+	return false
+}
+
+// joinPaths properly joins base path and sub path avoiding double slashes
+func (rs *RouteScanner) joinPaths(basePath, subPath string) string {
+	// Normalize paths
+	basePath = strings.TrimSuffix(basePath, "/")
+	subPath = strings.TrimPrefix(subPath, "/")
+	
+	if basePath == "" {
+		return "/" + subPath
+	}
+	if subPath == "" {
+		return basePath
+	}
+	
+	return basePath + "/" + subPath
 }
 
 func (rs *RouteScanner) isPublicStruct(name string) bool {
