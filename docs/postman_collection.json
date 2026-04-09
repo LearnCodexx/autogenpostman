@@ -1,0 +1,19 @@
+{
+  "event": [],
+  "info": {
+    "_postman_id": "e78503a1-c4dc-492f-ace7-7e206da96668",
+    "description": {
+      "content": "This is a sample API for testing postman generation",
+      "type": "text/plain"
+    },
+    "name": "API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "//localhost:8080/api/v1"
+    }
+  ]
+}

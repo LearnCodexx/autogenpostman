@@ -12,6 +12,14 @@ It only serves as an orchestration layer for mature tools:
 
 This approach makes the package more stable for use across many applications.
 
+## Key Features
+
+🔍 **Smart Path Detection**: Automatically finds your main.go in common locations  
+📁 **Flexible Structure**: Works with various project layouts (standard Go, microservice, monolith)  
+⚙️ **Zero Config**: Works out of the box with sensible defaults  
+🛠️ **Customizable**: Override paths via command-line flags when needed  
+🔄 **Fallback Support**: Auto-generates swagger or uses existing OpenAPI files  
+
 ## Installation
 
 ```bash

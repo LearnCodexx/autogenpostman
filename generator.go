@@ -160,26 +160,21 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	}
 
 	if cfg.OutputPath == "" {
-		cfg.OutputPath = filepath.Join("cmd", "postman", "postman_collection.json")
+		cfg.OutputPath = filepath.Join("docs", "postman_collection.json")
 	}
 	if cfg.MainFile == "" {
-		cfg.MainFile = "cmd/main.go"
+		cfg.MainFile = g.findMainFile(workingDir)
 	}
 	if cfg.SwagOutputDir == "" {
-		// Use cmd/postman as default instead of temporary directory
-		cfg.SwagOutputDir = filepath.Join(workingDir, "cmd", "postman")
+		// Use docs as default, more standard
+		cfg.SwagOutputDir = filepath.Join(workingDir, "docs")
 		// Create the directory if it doesn't exist
 		if err := os.MkdirAll(cfg.SwagOutputDir, 0755); err != nil {
 			return fmt.Errorf("create swag output dir: %w", err)
 		}
 	}
 	if len(cfg.SwaggerCandidates) == 0 {
-		cfg.SwaggerCandidates = []string{
-			filepath.Join("cmd", "postman", "swagger.json"),
-			filepath.Join("cmd", "postman", "openapi.yaml"),
-			filepath.Join("cmd", "postman", "openapi.yml"),
-			filepath.Join("cmd", "postman", "openapi-user.yaml"),
-		}
+		cfg.SwaggerCandidates = g.getSwaggerCandidates(workingDir)
 	}
 	lowLevelCfg := Config{
 		WorkingDir:     workingDir,
@@ -219,7 +214,7 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 		}
 	}
 
-	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found; provide SwaggerInputPath or add cmd/postman/openapi.yaml", swagErr)
+	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found; provide SwaggerInputPath or create one of: %s", swagErr, strings.Join(cfg.SwaggerCandidates[:3], ", "))
 }
 
 // GenerateAuto is a package-level convenience API for one-call generation.
@@ -386,4 +381,61 @@ func renameCollection(path string, name string) error {
 	}
 
 	return nil
+}
+
+// findMainFile attempts to locate the main.go file in common locations
+func (g *Generator) findMainFile(workingDir string) string {
+	candidates := []string{
+		"main.go",
+		"cmd/main.go", 
+		"cmd/api/main.go",
+		"cmd/server/main.go",
+		"cmd/app/main.go",
+		"app/main.go",
+		"api/main.go",
+		"server/main.go",
+	}
+	
+	for _, candidate := range candidates {
+		fullPath := filepath.Join(workingDir, candidate)
+		if g.fileExist(fullPath) {
+			return candidate
+		}
+	}
+	
+	// Default fallback
+	return "main.go"
+}
+
+// getSwaggerCandidates returns potential swagger file locations
+func (g *Generator) getSwaggerCandidates(workingDir string) []string {
+	baseDirs := []string{
+		"docs",
+		"api/docs", 
+		"cmd/postman",
+		"swagger",
+		"openapi",
+		".",
+	}
+	
+	files := []string{
+		"swagger.json",
+		"openapi.yaml", 
+		"openapi.yml",
+		"swagger.yaml",
+		"swagger.yml",
+		"api.yaml",
+		"api.yml",
+		"spec.yaml",
+		"spec.yml",
+	}
+	
+	var candidates []string
+	for _, dir := range baseDirs {
+		for _, file := range files {
+			candidates = append(candidates, filepath.Join(dir, file))
+		}
+	}
+	
+	return candidates
 }
