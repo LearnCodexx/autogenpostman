@@ -1,4 +1,4 @@
-package generatepostmanfile
+package autogenpostman
 
 import (
 	"fmt"

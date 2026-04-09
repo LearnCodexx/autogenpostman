@@ -1,4 +1,4 @@
-package generatepostmanfile
+package autogenpostman
 
 import (
 	"context"
@@ -26,15 +26,15 @@ type Config struct {
 // AutoConfig is a high-level configuration for one-call generation.
 // It tries to generate swagger with swag first, then falls back to existing OpenAPI files.
 type AutoConfig struct {
-	WorkingDir         string
-	OutputPath         string
-	CollectionName     string
-	Pretty             bool
-	MainFile           string
-	SwagOutputDir      string
-	SwaggerInputPath   string
-	SwaggerCandidates  []string
-	Postman            PostmanConfig
+	WorkingDir        string
+	OutputPath        string
+	CollectionName    string
+	Pretty            bool
+	MainFile          string
+	SwagOutputDir     string
+	SwaggerInputPath  string
+	SwaggerCandidates []string
+	Postman           PostmanConfig
 }
 
 // SwagConfig controls whether swagger docs should be generated via swag.
