@@ -219,7 +219,7 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 		}
 	}
 
-	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found; provide SwaggerInputPath or add docs/openapi.yaml", swagErr)
+	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found; provide SwaggerInputPath or add cmd/postman/openapi.yaml", swagErr)
 }
 
 // GenerateAuto is a package-level convenience API for one-call generation.
