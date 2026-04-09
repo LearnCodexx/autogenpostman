@@ -11,11 +11,12 @@ go install github.com/swaggo/swag/cmd/swag@latest
 # 2. Add package
 go get github.com/learncodexx/autogenpostman@latest
 
-# 3. Run generator (otomatis buat generator file)
-go run github.com/learncodexx/autogenpostman/cmd/postman@latest
+# 3. One-liner setup & generate (alternative)
+go run github.com/learncodexx/autogenpostman/cmd/postman@latest \
+  -collection-name "Your API Name"
 
 # 4. Generate postman
-go run cmd/postman-generator/main.go
+go run cmd/postman/main.go
 ```
 
 Done! Check `docs/postman_collection.json` 🎉
