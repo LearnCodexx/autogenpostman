@@ -147,6 +147,8 @@ func Generate(ctx context.Context, cfg Config) error {
 // 2) Otherwise, if swag exists in PATH, swagger is generated via swag.
 // 3) If swag is unavailable, generator falls back to existing OpenAPI candidate files.
 func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
+	fmt.Printf("🚀 Starting autogenpostman generation...\n")
+	
 	if g == nil {
 		return errors.New("generator is nil")
 	}
@@ -158,13 +160,19 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("📁 Working directory: %s\n", workingDir)
 
 	if cfg.OutputPath == "" {
 		cfg.OutputPath = filepath.Join("docs", "postman_collection.json")
 	}
+	fmt.Printf("📄 Output file: %s\n", cfg.OutputPath)
+	
 	if cfg.MainFile == "" {
 		cfg.MainFile = g.findMainFile(workingDir)
+	} else {
+		fmt.Printf("📍 Using specified main file: %s\n", cfg.MainFile)
 	}
+
 	if cfg.SwagOutputDir == "" {
 		// Use docs as default, more standard
 		cfg.SwagOutputDir = filepath.Join(workingDir, "docs")
@@ -173,6 +181,8 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 			return fmt.Errorf("create swag output dir: %w", err)
 		}
 	}
+	fmt.Printf("📂 Swagger output dir: %s\n", cfg.SwagOutputDir)
+
 	if len(cfg.SwaggerCandidates) == 0 {
 		cfg.SwaggerCandidates = g.getSwaggerCandidates(workingDir)
 	}
@@ -185,10 +195,12 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	}
 
 	if cfg.SwaggerInputPath != "" {
+		fmt.Printf("📄 Using provided OpenAPI file: %s\n", cfg.SwaggerInputPath)
 		lowLevelCfg.SwaggerInputPath = cfg.SwaggerInputPath
 		return g.Generate(ctx, lowLevelCfg)
 	}
 
+	fmt.Printf("🔄 Attempting auto-generation with swag...\n")
 	lowLevelCfg.Swag = SwagConfig{
 		Enabled:         true,
 		MainFile:        cfg.MainFile,
@@ -199,8 +211,11 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 	}
 	swagErr := g.Generate(ctx, lowLevelCfg)
 	if swagErr == nil {
+		fmt.Printf("🎉 Generation completed successfully!\n")
 		return nil
 	}
+
+	fmt.Printf("⚠️  Swagger generation failed, trying existing OpenAPI files...\n")
 
 	for _, candidate := range cfg.SwaggerCandidates {
 		candidatePath := candidate
@@ -208,13 +223,26 @@ func (g *Generator) GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 			candidatePath = filepath.Join(workingDir, candidatePath)
 		}
 		if g.fileExist(candidatePath) {
+			fmt.Printf("ℹ️  Using existing OpenAPI file: %s\n", candidate)
 			lowLevelCfg.SwaggerInputPath = candidatePath
 			lowLevelCfg.Swag = SwagConfig{}
 			return g.Generate(ctx, lowLevelCfg)
 		}
 	}
 
-	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found; provide SwaggerInputPath or create one of: %s", swagErr, strings.Join(cfg.SwaggerCandidates[:3], ", "))
+	suggestions := []string{
+		"1. Add swagger annotations to your main.go:",
+		"   // @title Your API Name",
+		"   // @version 1.0", 
+		"   // @host localhost:8080",
+		"   // @BasePath /api/v1",
+		"2. Install swag: go install github.com/swaggo/swag/cmd/swag@latest",
+		"3. Or create OpenAPI file at: " + cfg.SwaggerCandidates[0],
+		"4. Or specify existing file: --swagger-input=path/to/openapi.yaml",
+	}
+
+	return fmt.Errorf("auto swagger generation failed (%v) and no OpenAPI file found\n\n💡 Solutions:\n%s", 
+		swagErr, strings.Join(suggestions, "\n"))
 }
 
 // GenerateAuto is a package-level convenience API for one-call generation.
@@ -223,6 +251,17 @@ func GenerateAuto(ctx context.Context, cfg AutoConfig) error {
 }
 
 func (g *Generator) runSwag(ctx context.Context, cfg Config) error {
+	// Validate main file exists
+	mainFilePath := filepath.Join(cfg.WorkingDir, cfg.Swag.MainFile)
+	if !g.fileExist(mainFilePath) {
+		return fmt.Errorf("main file not found: %s (try --main-file flag to specify correct path)", cfg.Swag.MainFile)
+	}
+
+	// Validate swagger annotations
+	if err := g.validateMainFile(mainFilePath); err != nil {
+		return fmt.Errorf("main file validation failed: %w", err)
+	}
+
 	args := []string{"init", "-g", cfg.Swag.MainFile, "-o", cfg.Swag.OutputDir}
 	if cfg.Swag.ParseDependency {
 		args = append(args, "--parseDependency")
@@ -238,18 +277,41 @@ func (g *Generator) runSwag(ctx context.Context, cfg Config) error {
 	cmdArgs := args
 	if cfg.Swag.UseGoRun {
 		if _, err := g.lookPath("swag"); err != nil {
+			fmt.Printf("⚠️  swag not found in PATH, using 'go run github.com/swaggo/swag/cmd/swag@latest'\n")
 			cmdName = "go"
 			cmdArgs = append([]string{"run", "github.com/swaggo/swag/cmd/swag@latest"}, args...)
+		} else {
+			fmt.Printf("✅ Using swag from PATH\n")
 		}
 	}
 
+	fmt.Printf("🔄 Generating swagger from: %s\n", cfg.Swag.MainFile)
 	if err := g.runner.Run(ctx, cfg.WorkingDir, cmdName, cmdArgs...); err != nil {
-		return fmt.Errorf("generate swagger with swag: %w", err)
+		return fmt.Errorf("generate swagger with swag: %w\n💡 Troubleshooting:\n- Check swagger annotations in %s\n- Ensure @title, @version, @host, @BasePath are present\n- Verify import path: import _ \"yourmod/docs\"", err, cfg.Swag.MainFile)
 	}
+
+	// Validate swagger.json was generated
+	swaggerPath := filepath.Join(cfg.Swag.OutputDir, "swagger.json")
+	if !g.fileExist(swaggerPath) {
+		return fmt.Errorf("swagger.json not generated at %s - check swagger annotations", swaggerPath)
+	}
+
+	fmt.Printf("✅ Swagger generated: %s\n", swaggerPath)
 	return nil
 }
 
 func (g *Generator) runConvert(ctx context.Context, cfg Config) error {
+	// Validate swagger input exists
+	if !g.fileExist(cfg.SwaggerInputPath) {
+		return fmt.Errorf("swagger input file not found: %s", cfg.SwaggerInputPath)
+	}
+
+	// Create output directory if it doesn't exist
+	outputDir := filepath.Dir(cfg.OutputPath)
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return fmt.Errorf("create output directory: %w", err)
+	}
+
 	args := []string{"--yes", "openapi-to-postmanv2", "-s", cfg.SwaggerInputPath, "-o", cfg.OutputPath}
 	if cfg.Pretty {
 		args = append(args, "-p")
@@ -275,12 +337,24 @@ func (g *Generator) runConvert(ctx context.Context, cfg Config) error {
 		}
 	}
 
+	// Check if npx/node is available
+	if name == "npx" {
+		if _, err := g.lookPath("npx"); err != nil {
+			return fmt.Errorf("npx not found in PATH: %w\n💡 Install Node.js:\n- Ubuntu/Debian: sudo apt install nodejs npm\n- macOS: brew install node\n- Windows: Download from nodejs.org", err)
+		}
+	}
+
+	fmt.Printf("🔄 Converting OpenAPI to Postman: %s → %s\n", cfg.SwaggerInputPath, cfg.OutputPath)
 	if err := g.runner.Run(ctx, cfg.WorkingDir, name, args...); err != nil {
-		return fmt.Errorf("convert openapi to postman: %w", err)
+		return fmt.Errorf("convert openapi to postman: %w\n💡 Troubleshooting:\n- Verify swagger.json is valid JSON\n- Check Node.js/npm installation\n- Try: npx openapi-to-postmanv2 --version", err)
 	}
+
+	// Validate output file was created
 	if _, err := os.Stat(cfg.OutputPath); err != nil {
-		return fmt.Errorf("convert openapi to postman: output file not found at %s", cfg.OutputPath)
+		return fmt.Errorf("postman collection not generated at %s: %w", cfg.OutputPath, err)
 	}
+
+	fmt.Printf("✅ Postman collection generated: %s\n", cfg.OutputPath)
 	return nil
 }
 
@@ -394,16 +468,22 @@ func (g *Generator) findMainFile(workingDir string) string {
 		"app/main.go",
 		"api/main.go",
 		"server/main.go",
+		"service/main.go",
+		"cmd/service/main.go",
 	}
 	
+	fmt.Printf("🔍 Auto-detecting main.go file...\n")
 	for _, candidate := range candidates {
 		fullPath := filepath.Join(workingDir, candidate)
 		if g.fileExist(fullPath) {
+			fmt.Printf("✅ Found main.go at: %s\n", candidate)
 			return candidate
 		}
+		fmt.Printf("   ❌ Not found: %s\n", candidate)
 	}
 	
-	// Default fallback
+	fmt.Printf("⚠️  Main.go not found in common locations. Using default: main.go\n")
+	fmt.Printf("💡 Use --main-file flag to specify custom location\n")
 	return "main.go"
 }
 
@@ -438,4 +518,43 @@ func (g *Generator) getSwaggerCandidates(workingDir string) []string {
 	}
 	
 	return candidates
+}
+
+// validateMainFile checks if the main.go has proper swagger annotations
+func (g *Generator) validateMainFile(mainPath string) error {
+	content, err := os.ReadFile(mainPath)
+	if err != nil {
+		return fmt.Errorf("read main file %s: %w", mainPath, err)
+	}
+
+	contentStr := string(content)
+	
+	// Check for required annotations
+	required := []struct {
+		annotation string
+		message    string
+	}{
+		{"@title", "Missing @title annotation"},
+		{"@version", "Missing @version annotation"},
+		{"@host", "Missing @host annotation"},
+		{"@BasePath", "Missing @BasePath annotation"},
+	}
+	
+	missing := []string{}
+	for _, req := range required {
+		if !strings.Contains(contentStr, req.annotation) {
+			missing = append(missing, req.message)
+		}
+	}
+	
+	if len(missing) > 0 {
+		return fmt.Errorf("swagger validation failed:\n%s\n\n💡 Add these to your main.go:\n// @title Your API Name\n// @version 1.0\n// @host localhost:8080\n// @BasePath /api/v1", strings.Join(missing, "\n"))
+	}
+	
+	// Check for docs import
+	if !strings.Contains(contentStr, `/docs"`) && !strings.Contains(contentStr, "/docs\"") {
+		return fmt.Errorf("missing docs import in %s\n💡 Add: import _ \"yourmodule/docs\"", mainPath)
+	}
+	
+	return nil
 }
