@@ -13,7 +13,7 @@ func main() {
 	var (
 		swaggerInput = flag.String("swagger-input", "", "optional openapi/swagger file path; when empty will use auto mode")
 		output       = flag.String("output", "docs/postman_collection.json", "postman collection output path")
-		collection   = flag.String("collection-name", "API", "postman collection name")
+		collection   = flag.String("collection-name", "Example API", "postman collection name")
 		pretty       = flag.Bool("pretty", true, "pretty print output json")
 	)
 	flag.Parse()

@@ -1,36 +1,60 @@
-# generate_postman_file
+# AutoGenPostman
 
-Go package for automatically generating Postman collections from OpenAPI/Swagger.
+Go package untuk otomatis generate Postman collection dari OpenAPI/Swagger.
 
-## Approach
+## 🚀 Features
 
-This package does not perform custom OpenAPI to Postman mapping.
-It only serves as an orchestration layer for mature tools:
+🔍 **Smart Path Detection**: Otomatis cari main.go di lokasi umum  
+📁 **Flexible Structure**: Support berbagai struktur project  
+⚙️ **Zero Config**: Langsung jalan dengan default settings  
+🛠️ **Customizable**: Override path via command-line flags  
+🔄 **Fallback Support**: Auto-generate swagger atau pakai OpenAPI yang ada  
 
-- `swag` for generating swagger docs (optional)
-- `openapi-to-postmanv2` (via `npx`) for converting to Postman Collection v2.1
+## 📋 Prerequisites (WAJIB!)
 
-This approach makes the package more stable for use across many applications.
+### 1. Install Go Tools
+```bash
+# Install swag untuk generate swagger
+go install github.com/swaggo/swag/cmd/swag@latest
 
-## Key Features
+# Verify installation
+swag --version
+```
 
-🔍 **Smart Path Detection**: Automatically finds your main.go in common locations  
-📁 **Flexible Structure**: Works with various project layouts (standard Go, microservice, monolith)  
-⚙️ **Zero Config**: Works out of the box with sensible defaults  
-🛠️ **Customizable**: Override paths via command-line flags when needed  
-🔄 **Fallback Support**: Auto-generates swagger or uses existing OpenAPI files  
+### 2. Install Node.js & npm
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install nodejs npm
 
-## Installation
+# macOS  
+brew install node
 
+# Verify installation
+node --version
+npm --version
+```
+
+### 3. Fix Vendor Issues (Jika Ada)
+Jika dapat error "inconsistent vendoring":
+```bash
+# Di project target Anda
+go mod tidy
+go mod vendor
+
+# Atau skip vendor
+export GOFLAGS=-mod=mod
+```
+
+## 📦 Installation & Setup
+
+### Step 1: Install Package
+Di project target Anda:
 ```bash
 go get github.com/learncodexx/autogenpostman@latest
 ```
 
-## Quick Start
-
-### Option 1: Using Scaffolding (Recommended for new projects)
-
-Create a generator file in your project:
+### Step 2: Setup Generator Command
+Buat file untuk setup generator (cukup 1x saja):
 
 ```go
 // cmd/setup-postman/main.go
@@ -44,156 +68,287 @@ import (
 func main() {
     out, err := postmangen.EnsurePostmanCommand(postmangen.ScaffoldConfig{
         WorkingDir:          ".",
-        CommandPath:         "cmd/generate-postman/main.go",
+        CommandPath:         "cmd/postman-generator/main.go",  // Output generator
         GeneratorImportPath: "github.com/learncodexx/autogenpostman", 
-        CollectionName:      "My API",
-        OutputPath:          "cmd/postman/postman_collection.json",
+        CollectionName:      "My API",                        // Nama collection
+        OutputPath:          "docs/postman_collection.json",  // Output postman
         Force:               true,
     })
     if err != nil {
-        log.Fatalf("generate postman command failed: %v", err)
+        log.Fatalf("Setup failed: %v", err)
     }
-    log.Printf("Postman generator ready: %s", out)
+    log.Printf("Generator ready: %s", out)
 }
 ```
 
-Run it once to setup:
+Jalankan setup:
 ```bash
 go run cmd/setup-postman/main.go
 ```
 
-### Option 2: Direct Usage
+### Step 3: Setup API Annotations
+Pastikan main.go Anda punya swagger annotations:
 
 ```go
-// cmd/generate-postman/main.go  
-package main
-
-import (
-    "context"
-    "flag"
-    "log"
-    postmangen "github.com/learncodexx/autogenpostman"
-)
-
-func main() {
-    var (
-        swaggerInput = flag.String("swagger-input", "", "optional openapi/swagger file path")
-        output       = flag.String("output", "cmd/postman/postman_collection.json", "output path")
-        collection   = flag.String("collection-name", "My API", "collection name")
-        mainFile     = flag.String("main-file", "cmd/server/main.go", "path to your main.go")
-        pretty       = flag.Bool("pretty", true, "pretty print output")
-    )
-    flag.Parse()
-
-    cfg := postmangen.AutoConfig{
-        WorkingDir:        ".",
-        MainFile:          *mainFile,           // IMPORTANT: adjust to your app structure
-        SwaggerInputPath:  *swaggerInput,
-        OutputPath:        *output,
-        CollectionName:    *collection,
-        Pretty:            *pretty,
-        SwagOutputDir:     "cmd/postman",       // Output swagger files here
-        Postman: postmangen.PostmanConfig{
-            Options: map[string]string{
-                "folderStrategy": "Tags",
-            },
-        },
-    }
-
-    if err := postmangen.GenerateAuto(context.Background(), cfg); err != nil {
-        log.Fatalf("generate postman failed: %v", err)
-    }
-
-    log.Printf("Postman collection generated: %s", *output)
-}
-```
-
-### Ensure your main.go has swagger annotations
-
-```go
-// cmd/server/main.go (or wherever your API server is)
+// main.go atau cmd/api/main.go
 package main
 
 import (
     "github.com/gin-gonic/gin"
-    _ "yourapp/docs" // Will be generated by swag
+    _ "yourapp/docs"  // Will be generated
 )
 
-// @title           Your API
+// @title           Your API Name
 // @version         1.0
-// @description     API description
-// @host            localhost:8080
-// @BasePath        /api/v1
+// @description     API description here
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.email  support@yourcompany.com
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
 func main() {
     r := gin.Default()
     
-    // @Summary      Get users
-    // @Description  Get all users
-    // @Tags         users
+    // @Summary      Health check
+    // @Description  Check if API is running
+    // @Tags         health
     // @Accept       json
     // @Produce      json
-    // @Success      200  {array}   User
-    // @Router       /users [get]
-    r.GET("/api/v1/users", GetUsers)
+    // @Success      200  {object}  map[string]string
+    // @Router       /health [get]
+    r.GET("/health", healthCheck)
     
     r.Run(":8080")
 }
 ```
 
-### Generate Postman Collection
+## 🏃‍♂️ Usage
 
+### Method 1: Auto-Detection (Recommended)
 ```bash
-# If using scaffolding approach:
-go run cmd/generate-postman/main.go
-
-# If need to specify different main file:
-go run cmd/generate-postman/main.go --main-file=cmd/api/main.go
-
-# If you have existing OpenAPI file:
-go run cmd/generate-postman/main.go --swagger-input=api/openapi.yaml
+# Generator otomatis cari main.go dan generate
+go run cmd/postman-generator/main.go
 ```
 
-## Generated File Structure
-
-After running the generator, you'll have:
-
-```
-cmd/
-├── postman/
-│   ├── postman_collection.json    # Generated Postman collection
-│   ├── swagger.json               # Generated by swag
-│   └── docs.go                    # Generated by swag
-└── generate-postman/
-    └── main.go                    # Your generator command
-```
-
-## Runtime Requirements
-
-- Go 1.21+
-- `swag` available in PATH (if auto-generating swagger)
-- Node.js + `npx` (for OpenAPI to Postman conversion)
-
-Install swag:
+### Method 2: Specify Custom Paths  
 ```bash
+# Jika main.go di lokasi custom
+go run cmd/postman-generator/main.go \
+  --swagger-input="" \
+  --main-file="path/to/your/main.go" \
+  --output="custom/output.json" \
+  --collection-name="Custom API"
+```
+
+### Method 3: Pakai OpenAPI File yang Ada
+```bash
+# Jika sudah punya openapi.yaml
+go run cmd/postman-generator/main.go \
+  --swagger-input="api/openapi.yaml" \
+  --output="docs/postman.json"
+```
+
+## 📁 Supported Project Structures
+
+### ✅ Standard Go Project
+```
+project/
+├── cmd/
+│   └── api/main.go          # ← Auto-detected
+├── docs/
+│   └── postman_collection.json  # ← Generated
+```
+
+### ✅ Simple Web App  
+```
+project/
+├── main.go                  # ← Auto-detected
+├── docs/
+│   └── postman_collection.json  # ← Generated
+```
+
+### ✅ Microservice
+```
+project/
+├── cmd/
+│   └── server/main.go       # ← Auto-detected  
+├── api/
+│   └── openapi.yaml        # ← Auto-detected
+└── docs/
+    └── postman_collection.json  # ← Generated
+```
+
+## 🔧 Step-by-Step Example
+
+### Contoh Project Baru:
+
+1. **Init project:**
+```bash
+mkdir my-api && cd my-api
+go mod init my-api
+```
+
+2. **Install dependencies:**
+```bash
+go get github.com/gin-gonic/gin
+go get github.com/learncodexx/autogenpostman@latest
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
-## Troubleshooting
+3. **Buat main.go dengan annotations:**
+```go
+// main.go
+package main
 
-**Error: "no Go files found" or "cannot parse source files"**
+import (
+    "github.com/gin-gonic/gin"
+    _ "my-api/docs"
+)
 
-Make sure you specify the correct path to your main.go file with swagger annotations:
-```bash
-go run cmd/generate-postman/main.go --main-file=path/to/your/main.go
+// @title My API
+// @version 1.0  
+// @host localhost:8080
+// @BasePath /api/v1
+func main() {
+    r := gin.Default()
+    
+    // @Summary Get users
+    // @Tags users
+    // @Success 200 {array} map[string]interface{}
+    // @Router /api/v1/users [get]
+    r.GET("/api/v1/users", func(c *gin.Context) {
+        c.JSON(200, []map[string]interface{}{
+            {"id": 1, "name": "John"},
+        })
+    })
+    
+    r.Run(":8080")
+}
 ```
 
-**Error: "no OpenAPI file found"**
+4. **Setup generator:**
+```bash
+mkdir -p cmd/setup-postman
+# Copy setup code dari atas ke cmd/setup-postman/main.go 
+go run cmd/setup-postman/main.go
+```
 
-Either:
-1. Add swagger annotations to your main.go and ensure `swag` is installed
-2. Or provide an existing OpenAPI file: `--swagger-input=path/to/openapi.yaml`
+5. **Generate postman:**
+```bash
+go run cmd/postman-generator/main.go
+```
 
-## Usage Examples
+6. **Result:**
+```
+docs/
+├── postman_collection.json  # ← Your Postman collection!
+├── swagger.json            # ← Generated swagger
+└── docs.go                 # ← Generated by swag
+```
+
+## 🆘 Troubleshooting
+
+### Error: "inconsistent vendoring"
+```bash
+# Solution 1: Fix vendor
+go mod tidy && go mod vendor
+
+# Solution 2: Skip vendor  
+go run -mod=mod cmd/postman-generator/main.go
+```
+
+### Error: "no Go files found"
+```bash
+# Specify correct main file location
+go run cmd/postman-generator/main.go --main-file="your/main.go"
+```
+
+### Error: "swag command not found"
+```bash
+# Install swag
+go install github.com/swaggo/swag/cmd/swag@latest
+
+# Add to PATH (add to ~/.bashrc)
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+### Error: "npx command not found"  
+```bash
+# Install Node.js
+# Ubuntu: sudo apt install nodejs npm
+# macOS: brew install node
+```
+
+### Error: "cannot find package docs"
+Tambahkan blank import ke main.go:
+```go
+import _ "yourapp/docs"
+```
+
+### Generate Empty Collection
+Main.go perlu swagger annotations yang proper:
+```go
+// @title API Name        # ← WAJIB
+// @version 1.0          # ← WAJIB  
+// @host localhost:8080  # ← WAJIB
+// @BasePath /api        # ← WAJIB
+
+// @Summary endpoint description    # ← Per endpoint
+// @Router /path [method]           # ← Per endpoint
+```
+
+## 📚 Advanced Usage
+
+### Custom Configuration
+```go
+cfg := postmangen.AutoConfig{
+    WorkingDir:        ".",
+    MainFile:          "cmd/server/main.go",    # Custom main path
+    SwaggerInputPath:  "api/spec.yaml",        # Custom OpenAPI
+    OutputPath:        "build/postman.json",   # Custom output
+    CollectionName:    "Production API",       # Custom name
+    Pretty:            true,                   # Pretty JSON
+    SwagOutputDir:     "docs",                 # Swagger output
+    Postman: postmangen.PostmanConfig{
+        Options: map[string]string{
+            "folderStrategy": "Tags",           # Group by tags
+        },
+    },
+}
+
+postmangen.GenerateAuto(context.Background(), cfg)
+```
+
+### CI/CD Integration
+```yaml
+# .github/workflows/postman.yml
+name: Generate Postman Collection
+on: [push]
+jobs:
+  postman:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v3
+    - uses: actions/setup-node@v3
+    - run: go install github.com/swaggo/swag/cmd/swag@latest  
+    - run: go run cmd/postman-generator/main.go
+    - uses: actions/upload-artifact@v3
+      with:
+        name: postman-collection
+        path: docs/postman_collection.json
+```
+
+## 🤝 Contributing
+
+Issues dan PR welcome di [GitHub repository](https://github.com/learncodexx/autogenpostman).
+
+## 📄 License
+
+MIT License
 
 ### One-call (recommended for use from other applications)
 

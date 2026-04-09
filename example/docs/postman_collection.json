@@ -1,0 +1,354 @@
+{
+  "event": [],
+  "info": {
+    "_postman_id": "1044460b-e101-402e-b351-fe6625970621",
+    "description": {
+      "content": "Sample API for demonstrating autogenpostman package",
+      "type": "text/plain"
+    },
+    "name": "Example API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "35673497-66c8-4599-8043-374f6100d9b8",
+          "name": "Health check",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {},
+            "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "GET",
+            "name": "Health check",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "{\n  \"message\": \"\u003cstring\u003e\",\n  \"status\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "id": "071e83bc-503c-4669-b7ca-2625458d8e9b",
+              "name": "OK",
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        }
+      ],
+      "name": "health"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "e1cef300-8194-4e17-b53b-19271d670660",
+          "name": "List users",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {},
+            "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "GET",
+            "name": "List users",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "[\n  {\n    \"email\": \"\u003cstring\u003e\",\n    \"id\": \"\u003cinteger\u003e\",\n    \"name\": \"\u003cstring\u003e\"\n  },\n  {\n    \"email\": \"\u003cstring\u003e\",\n    \"id\": \"\u003cinteger\u003e\",\n    \"name\": \"\u003cstring\u003e\"\n  }\n]",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "id": "1cdfa49c-3648-4764-870e-250ae1fe3242",
+              "name": "OK",
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "id": "a6edc311-17e7-4c6e-b831-c5fd6830265b",
+          "name": "Create a user",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{\n  \"email\": \"\u003cstring\u003e\",\n  \"id\": \"\u003cinteger\u003e\",\n  \"name\": \"\u003cstring\u003e\"\n}"
+            },
+            "description": {},
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "POST",
+            "name": "Create a user",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "{\n  \"email\": \"\u003cstring\u003e\",\n  \"id\": \"\u003cinteger\u003e\",\n  \"name\": \"\u003cstring\u003e\"\n}",
+              "code": 201,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "id": "09f36f3d-fc1a-45bd-8b68-f16a5267b65b",
+              "name": "Created",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{\n  \"email\": \"\u003cstring\u003e\",\n  \"id\": \"\u003cinteger\u003e\",\n  \"name\": \"\u003cstring\u003e\"\n}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Created"
+            }
+          ]
+        },
+        {
+          "event": [],
+          "id": "ad6b54bf-4428-4857-80ae-b57c3bf878b6",
+          "name": "Get a user",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {},
+            "description": {},
+            "header": [
+              {
+                "key": "Accept",
+                "value": "*/*"
+              }
+            ],
+            "method": "GET",
+            "name": "Get a user",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": {
+                    "content": "(Required) User ID",
+                    "type": "text/plain"
+                  },
+                  "disabled": false,
+                  "key": "id",
+                  "type": "any",
+                  "value": "\u003cinteger\u003e"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": "{\n  \"email\": \"\u003cstring\u003e\",\n  \"id\": \"\u003cinteger\u003e\",\n  \"name\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "*/*"
+                }
+              ],
+              "id": "a0ff6f1c-2310-4f60-a8db-cac414d26305",
+              "name": "OK",
+              "originalRequest": {
+                "body": {},
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": {
+                        "content": "(Required) User ID",
+                        "type": "text/plain"
+                      },
+                      "disabled": false,
+                      "key": "id",
+                      "type": "any",
+                      "value": "\u003cinteger\u003e"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            }
+          ]
+        }
+      ],
+      "name": "users"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "//localhost:8080/api/v1"
+    }
+  ]
+}
