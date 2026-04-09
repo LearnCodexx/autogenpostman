@@ -35,6 +35,15 @@ type AutoConfig struct {
 	SwaggerInputPath  string
 	SwaggerCandidates []string
 	Postman           PostmanConfig
+	RouteDiscovery    RouteDiscoveryConfig
+}
+
+// RouteDiscoveryConfig controls automatic route scanning
+type RouteDiscoveryConfig struct {
+	Enabled     bool
+	ProjectPath string
+	IncludeAuth bool
+	TagStrategy string // "path", "handler", "file"
 }
 
 // SwagConfig controls whether swagger docs should be generated via swag.
@@ -139,6 +148,93 @@ func (g *Generator) Generate(ctx context.Context, cfg Config) error {
 // Generate is a package-level convenience API.
 func Generate(ctx context.Context, cfg Config) error {
 	return New().Generate(ctx, cfg)
+}
+
+// GenerateWithRouteDiscovery generates Postman collection using automatic route discovery
+func (g *Generator) GenerateWithRouteDiscovery(ctx context.Context, cfg AutoConfig) error {
+	fmt.Printf("🚀 Starting autogenpostman with route discovery...\n")
+	
+	if g == nil {
+		return errors.New("generator is nil")
+	}
+	if g.runner == nil || g.lookPath == nil || g.fileExist == nil {
+		*g = *New()
+	}
+	
+	workingDir, err := resolveWorkingDir(cfg.WorkingDir)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("📁 Working directory: %s\n", workingDir)
+	
+	if cfg.OutputPath == "" {
+		cfg.OutputPath = filepath.Join("docs", "postman_collection.json")
+	}
+	fmt.Printf("📄 Output file: %s\n", cfg.OutputPath)
+	
+	// Step 1: Discover routes automatically
+	projectPath := cfg.RouteDiscovery.ProjectPath
+	if projectPath == "" {
+		projectPath = workingDir
+	}
+	
+	scanner := NewRouteScanner(projectPath)
+	if err := scanner.ScanRoutes(); err != nil {
+		return fmt.Errorf("route discovery failed: %w", err)
+	}
+	
+	scanner.PrintSummary()
+	
+	routes := scanner.GetDiscoveredRoutes()
+	models := scanner.GetDiscoveredModels()
+	
+	if len(routes) == 0 {
+		return fmt.Errorf("no routes discovered - ensure your Go files contain route definitions")
+	}
+	
+	// Step 2: Generate swagger from discovered routes
+	swaggerPath := filepath.Join(cfg.SwagOutputDir, "swagger.json")
+	if cfg.SwagOutputDir == "" {
+		cfg.SwagOutputDir = filepath.Join(workingDir, "docs")
+	}
+	
+	if err := os.MkdirAll(cfg.SwagOutputDir, 0755); err != nil {
+		return fmt.Errorf("create swagger output dir: %w", err)
+	}
+	
+	if err := g.generateSwaggerFromDiscoveredRoutes(routes, models, swaggerPath, cfg); err != nil {
+		return fmt.Errorf("generate swagger from routes: %w", err)
+	}
+	
+	fmt.Printf("✅ Generated swagger from discovered routes: %s\n", swaggerPath)
+	
+	// Step 3: Convert to Postman collection
+	lowLevelCfg := Config{
+		WorkingDir:       workingDir,
+		SwaggerInputPath: swaggerPath,
+		OutputPath:       cfg.OutputPath,
+		CollectionName:   cfg.CollectionName,
+		Pretty:           cfg.Pretty,
+		Postman:          cfg.Postman,
+	}
+	
+	if err := g.runConvert(ctx, lowLevelCfg); err != nil {
+		return fmt.Errorf("convert to postman: %w", err)
+	}
+	
+	if cfg.CollectionName != "" {
+		if err := renameCollection(cfg.OutputPath, cfg.CollectionName); err != nil {
+			return fmt.Errorf("rename collection: %w", err)
+		}
+	}
+	
+	fmt.Printf("🎉 Route discovery generation completed!\n")
+	return nil
+}
+
+// GenerateWithRouteDiscovery is a package-level convenience API for route discovery
+func GenerateWithRouteDiscovery(ctx context.Context, cfg AutoConfig) error {
+	return New().GenerateWithRouteDiscovery(ctx, cfg)
 }
 
 // GenerateAuto is a high-level package API intended for cross-application reuse.
@@ -863,4 +959,238 @@ func (g *Generator) validateMainFileLenient(mainPath string) error {
 
 	// Always return nil for lenient validation
 	return nil
+}
+
+// generateSwaggerFromDiscoveredRoutes creates OpenAPI/Swagger spec from discovered routes
+func (g *Generator) generateSwaggerFromDiscoveredRoutes(routes []DiscoveredRoute, models []DiscoveredModel, outputPath string, cfg AutoConfig) error {
+	fmt.Printf("📝 Generating swagger from %d discovered routes...\n", len(routes))
+	
+	// Create OpenAPI 2.0 spec structure
+	swagger := map[string]interface{}{
+		"swagger": "2.0",
+		"info": map[string]interface{}{
+			"title":       "Auto-Discovered API",
+			"version":     "1.0.0",
+			"description": fmt.Sprintf("API automatically generated from %d discovered routes", len(routes)),
+		},
+		"host":                "localhost:8080",
+		"basePath":            "/api/v1",
+		"schemes":             []string{"http", "https"},
+		"consumes":            []string{"application/json"},
+		"produces":            []string{"application/json"},
+		"paths":               make(map[string]interface{}),
+		"definitions":         make(map[string]interface{}),
+		"securityDefinitions": make(map[string]interface{}),
+	}
+	
+	// Add security definitions if any routes require auth
+	hasAuth := false
+	for _, route := range routes {
+		if route.Auth {
+			hasAuth = true
+			break
+		}
+	}
+	
+	if hasAuth {
+		swagger["securityDefinitions"] = map[string]interface{}{
+			"BearerAuth": map[string]interface{}{
+				"type":        "apiKey",
+				"name":        "Authorization",
+				"in":          "header",
+				"description": "JWT Authorization header using Bearer scheme",
+			},
+		}
+	}
+	
+	// Generate paths from routes
+	paths := swagger["paths"].(map[string]interface{})
+	for _, route := range routes {
+		if paths[route.Path] == nil {
+			paths[route.Path] = make(map[string]interface{})
+		}
+		
+		pathObj := paths[route.Path].(map[string]interface{})
+		
+		// Create operation object
+		operation := map[string]interface{}{
+			"summary":     route.Summary,
+			"description": route.Description,
+			"tags":        route.Tags,
+			"operationId": g.generateOperationId(route),
+			"responses":   g.generateResponses(route),
+		}
+		
+		// Add security if required
+		if route.Auth {
+			operation["security"] = []map[string]interface{}{
+				{"BearerAuth": []string{}},
+			}
+		}
+		
+		// Add request parameters/body based on method
+		if route.Method == "POST" || route.Method == "PUT" || route.Method == "PATCH" {
+			operation["parameters"] = []map[string]interface{}{
+				{
+					"in":          "body",
+					"name":        "body",
+					"description": "Request body",
+					"schema": map[string]interface{}{
+						"type": "object",
+					},
+				},
+			}
+		}
+		
+		pathObj[strings.ToLower(route.Method)] = operation
+	}
+	
+	// Generate definitions from models
+	definitions := swagger["definitions"].(map[string]interface{})
+	for _, model := range models {
+		properties := make(map[string]interface{})
+		required := []string{}
+		
+		for _, field := range model.Fields {
+			jsonName := field.JsonTag
+			if jsonName == "" {
+				jsonName = field.Name
+			}
+			
+			properties[jsonName] = map[string]interface{}{
+				"type":        g.convertGoTypeToSwagger(field.Type),
+				"description": fmt.Sprintf("%s field", field.Name),
+			}
+			
+			if field.Required {
+				required = append(required, jsonName)
+			}
+		}
+		
+		modelDef := map[string]interface{}{
+			"type":        "object",
+			"properties":  properties,
+			"description": fmt.Sprintf("Model: %s", model.Name),
+		}
+		
+		if len(required) > 0 {
+			modelDef["required"] = required
+		}
+		
+		definitions[model.Name] = modelDef
+	}
+	
+	// Add common response models
+	definitions["ResponseDto"] = map[string]interface{}{
+		"type": "object",
+		"properties": map[string]interface{}{
+			"code": map[string]interface{}{
+				"type":        "integer",
+				"description": "Response code",
+			},
+			"message": map[string]interface{}{
+				"type":        "string", 
+				"description": "Response message",
+			},
+			"data": map[string]interface{}{
+				"type":        "object",
+				"description": "Response data",
+			},
+		},
+	}
+	
+	definitions["ErrorResponse"] = map[string]interface{}{
+		"type": "object",
+		"properties": map[string]interface{}{
+			"error": map[string]interface{}{
+				"type":        "string",
+				"description": "Error message",
+			},
+			"code": map[string]interface{}{
+				"type":        "integer", 
+				"description": "Error code",
+			},
+		},
+	}
+	
+	// Write to file
+	file, err := os.Create(outputPath)
+	if err != nil {
+		return fmt.Errorf("create swagger file: %w", err)
+	}
+	defer file.Close()
+	
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(swagger); err != nil {
+		return fmt.Errorf("encode swagger JSON: %w", err)
+	}
+	
+	fmt.Printf("✅ Swagger generated: %s (%d paths, %d definitions)\n", outputPath, len(paths), len(definitions))
+	return nil
+}
+
+// Helper methods for swagger generation
+
+func (g *Generator) generateOperationId(route DiscoveredRoute) string {
+	method := strings.ToLower(route.Method)
+	pathParts := strings.Split(strings.Trim(route.Path, "/"), "/")
+	
+	if len(pathParts) > 0 {
+		resource := pathParts[0]
+		return fmt.Sprintf("%s%s", method, strings.Title(resource))
+	}
+	
+	return fmt.Sprintf("%sOperation", method)
+}
+
+func (g *Generator) generateResponses(route DiscoveredRoute) map[string]interface{} {
+	responses := map[string]interface{}{
+		"200": map[string]interface{}{
+			"description": "Success",
+			"schema": map[string]interface{}{
+				"$ref": "#/definitions/ResponseDto",
+			},
+		},
+		"400": map[string]interface{}{
+			"description": "Bad Request",
+			"schema": map[string]interface{}{
+				"$ref": "#/definitions/ErrorResponse",
+			},
+		},
+		"500": map[string]interface{}{
+			"description": "Internal Server Error", 
+			"schema": map[string]interface{}{
+				"$ref": "#/definitions/ErrorResponse",
+			},
+		},
+	}
+	
+	if route.Auth {
+		responses["401"] = map[string]interface{}{
+			"description": "Unauthorized",
+			"schema": map[string]interface{}{
+				"$ref": "#/definitions/ErrorResponse",
+			},
+		}
+	}
+	
+	return responses
+}
+
+func (g *Generator) convertGoTypeToSwagger(goType string) string {
+	switch {
+	case strings.HasPrefix(goType, "[]"):
+		return "array"
+	case goType == "string":
+		return "string"
+	case goType == "int" || goType == "int64" || goType == "int32":
+		return "integer"
+	case goType == "bool":
+		return "boolean"
+	case goType == "float64" || goType == "float32":
+		return "number"
+	default:
+		return "string"
+	}
 }

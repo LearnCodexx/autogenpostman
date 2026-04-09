@@ -1,0 +1,2906 @@
+{
+  "event": [],
+  "info": {
+    "_postman_id": "3234d1b8-3cef-4c49-b87e-bdef8480b8b3",
+    "description": {
+      "content": "API automatically generated from 13 discovered routes",
+      "type": "text/plain"
+    },
+    "name": "User Service API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "ff280981-e680-408a-bc23-925ad799be00",
+          "name": "Post Signout",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ],
+              "type": "apikey"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /signout endpoint (handler: ua.SignOut)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post Signout",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "signout"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "0284d2f4-6c89-4d2c-80a2-9f4668a86bfe",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signout"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "0625081e-c380-44c3-ba12-d1795ee94a81",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signout"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 401,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "a423c719-1cd2-4113-a25e-a6d2fda129dc",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signout"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "bef7f2f2-afa8-4db6-8abd-20db1c3a58f8",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signout"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "signout"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "2293a043-cbaa-40c3-a7c2-86795bedc037",
+          "name": "Post All",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ],
+              "type": "apikey"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /all endpoint (handler: ua.GetAllUser)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post All",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "all"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "08f453bb-6407-4734-a513-6dd5cf1a749d",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "all"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "b8f11453-0135-4cbc-a7f9-24715c385d3e",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "all"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 401,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "c0e95152-d474-41ed-a5fe-4477393742f0",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "all"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "21b4379b-a714-4a98-8656-ac36472c6d2a",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "all"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "all"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "5392e1b6-cf03-4cfe-a8be-67a8ffb8af6e",
+          "name": "Post Byemail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ],
+              "type": "apikey"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /byemail endpoint (handler: ua.GetUserByEmail)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post Byemail",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "byemail"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "84425873-0ed5-44cd-b3e1-c321b6f2008e",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "byemail"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "0f16db49-0951-4b17-9232-7956f97f6ce3",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "byemail"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 401,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "bcb075f6-da52-42b5-b341-44a20a489c14",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "byemail"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "95508cf6-cffe-443b-8e30-e4ec46360f2f",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "byemail"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "byemail"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "description": "",
+          "item": [
+            {
+              "event": [],
+              "id": "176173f7-bf78-47e4-89e5-880e67cf1764",
+              "name": "Post Get",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "Authorization"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{apiKey}}"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header"
+                    }
+                  ],
+                  "type": "apikey"
+                },
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "description": {
+                  "content": "POST operation for /get/all endpoint (handler: ua.GetAllUser)",
+                  "type": "text/plain"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "name": "Post Get",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "get",
+                    "all"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "response": [
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+                  "code": 200,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "55719081-2849-4e12-8d99-baf7f31c1904",
+                  "name": "Success",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "all"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "OK"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 400,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "f4c28b58-695d-445b-b2ea-e37cd253d43d",
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "all"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Bad Request"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 401,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "9e1e4ad0-7731-42e1-a9e3-2b5f0b8a74a5",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "all"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Unauthorized"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 500,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "0c50c9f3-e65f-41b3-b91a-537e1fa607da",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "all"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Internal Server Error"
+                }
+              ]
+            }
+          ],
+          "name": "all"
+        },
+        {
+          "description": "",
+          "item": [
+            {
+              "event": [],
+              "id": "1b80533c-17fe-41c7-a8ae-fc9ded4e7e1b",
+              "name": "Post Get",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "Authorization"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{apiKey}}"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header"
+                    }
+                  ],
+                  "type": "apikey"
+                },
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "description": {
+                  "content": "POST operation for /get/byemail endpoint (handler: ua.GetUserByEmail)",
+                  "type": "text/plain"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "name": "Post Get",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "get",
+                    "byemail"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "response": [
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+                  "code": 200,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "f8831c4b-984b-46a4-ad41-e7213f935695",
+                  "name": "Success",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "byemail"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "OK"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 400,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "8c7e0c95-1f6e-4bcd-9e5f-3cdf0ce2d21c",
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "byemail"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Bad Request"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 401,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "2f96b87b-4472-416c-af19-c85d78303057",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "byemail"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Unauthorized"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 500,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "f5bdb7a7-4fdb-4a8c-90e0-b54156b7ad4b",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "get",
+                        "byemail"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Internal Server Error"
+                }
+              ]
+            }
+          ],
+          "name": "byemail"
+        }
+      ],
+      "name": "get"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "05217e67-d02d-4592-9116-7593a253eec9",
+          "name": "Post Path",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /path endpoint (handler: handler)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post Path",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "path"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "4c22f5e1-8c0d-4fd3-b8c9-a73fde88ed1a",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "path"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "14dd0e34-4ca4-49db-b5d5-76c60cb5efe5",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "path"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "1be55c7b-d941-4169-9a57-b99182a66c42",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "path"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "path"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "487f9225-e976-4efb-800c-9c119ef08d0d",
+          "name": "Post Signin",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ],
+              "type": "apikey"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /signin endpoint (handler: ua.SignIn)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post Signin",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "signin"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "9b202e4f-5354-4a72-bd3d-00c27fff0318",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signin"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "d89a4540-f148-4fdb-8067-6116eade7423",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signin"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 401,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "c684825e-6d76-437c-9292-b78576b444ef",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signin"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "5940e0b5-b416-4393-9cd3-342928c69045",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signin"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "signin"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "event": [],
+          "id": "384783ff-77d9-4648-881e-fd97340cb1a6",
+          "name": "Post Signup",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ],
+              "type": "apikey"
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              },
+              "raw": "{}"
+            },
+            "description": {
+              "content": "POST operation for /signup endpoint (handler: ua.SignUp)",
+              "type": "text/plain"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "name": "Post Signup",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "signup"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "43346308-c0ac-42a2-846f-0e98f4532c20",
+              "name": "Success",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signup"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 400,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "233b150b-f80d-4c0c-b5c4-3312dba04134",
+              "name": "Bad Request",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signup"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 401,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "50552c41-e954-4809-8158-de36897084ba",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signup"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+              "code": 500,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "id": "668223a7-e1f9-4c4c-bd72-83e48287052c",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "\u003cAPI Key\u003e"
+                  }
+                ],
+                "method": "POST",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "signup"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "status": "Internal Server Error"
+            }
+          ]
+        }
+      ],
+      "name": "signup"
+    },
+    {
+      "description": "",
+      "item": [
+        {
+          "description": "",
+          "item": [
+            {
+              "event": [],
+              "id": "3e0aeab9-f01e-4dbc-a479-644f0324543a",
+              "name": "Post Users",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "Authorization"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{apiKey}}"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header"
+                    }
+                  ],
+                  "type": "apikey"
+                },
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "description": {
+                  "content": "POST operation for /users/signin endpoint (handler: ua.SignIn)",
+                  "type": "text/plain"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "name": "Post Users",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "signin"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "response": [
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+                  "code": 200,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "f54c6fde-c2bb-4920-b5e0-20ee5d6be978",
+                  "name": "Success",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signin"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "OK"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 400,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "a708cd74-f7ff-4a1e-b981-effb864e16d3",
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signin"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Bad Request"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 401,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "045f3443-1d76-48aa-bfc6-cde66fce3818",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signin"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Unauthorized"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 500,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "fa1ab233-e51f-46e6-afbe-3dc0762d23dc",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signin"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Internal Server Error"
+                }
+              ]
+            }
+          ],
+          "name": "signin"
+        },
+        {
+          "description": "",
+          "item": [
+            {
+              "event": [],
+              "id": "90d321f8-ca65-47c0-a5f4-cb50e30f76c4",
+              "name": "Post Users",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "Authorization"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{apiKey}}"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header"
+                    }
+                  ],
+                  "type": "apikey"
+                },
+                "body": {
+                  "mode": "raw",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  },
+                  "raw": "{}"
+                },
+                "description": {
+                  "content": "POST operation for /users/signup endpoint (handler: ua.SignUp)",
+                  "type": "text/plain"
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "name": "Post Users",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "signup"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              },
+              "response": [
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"data\": {},\n  \"message\": \"\u003cstring\u003e\"\n}",
+                  "code": 200,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "9de6bedc-3536-40ec-aeca-bd4386bd833c",
+                  "name": "Success",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signup"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "OK"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 400,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "27abc29c-38ab-4587-b291-ad11a8cba297",
+                  "name": "Bad Request",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signup"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Bad Request"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 401,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "e9152ca6-9391-4f8c-a53b-841520606dda",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signup"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Unauthorized"
+                },
+                {
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"code\": \"\u003cinteger\u003e\",\n  \"error\": \"\u003cstring\u003e\"\n}",
+                  "code": 500,
+                  "cookie": [],
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "id": "480c147a-a470-4b08-93e9-c696c06f8f1d",
+                  "name": "Internal Server Error",
+                  "originalRequest": {
+                    "body": {
+                      "mode": "raw",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      },
+                      "raw": "{}"
+                    },
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": {
+                          "content": "Added as a part of security scheme: apikey",
+                          "type": "text/plain"
+                        },
+                        "key": "Authorization",
+                        "value": "\u003cAPI Key\u003e"
+                      }
+                    ],
+                    "method": "POST",
+                    "url": {
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "signup"
+                      ],
+                      "query": [],
+                      "variable": []
+                    }
+                  },
+                  "status": "Internal Server Error"
+                }
+              ]
+            }
+          ],
+          "name": "signup"
+        }
+      ],
+      "name": "users"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    }
+  ]
+}

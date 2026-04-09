@@ -1,0 +1,702 @@
+{
+  "basePath": "/api/v1",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {
+    "ErrorResponse": {
+      "properties": {
+        "code": {
+          "description": "Error code",
+          "type": "integer"
+        },
+        "error": {
+          "description": "Error message",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ResponseDto": {
+      "properties": {
+        "code": {
+          "description": "Response code",
+          "type": "integer"
+        },
+        "data": {
+          "description": "Response data",
+          "type": "object"
+        },
+        "message": {
+          "description": "Response message",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserDto": {
+      "description": "Model: UserDto",
+      "properties": {
+        "address,omitempty": {
+          "description": "Address field",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email field",
+          "type": "string"
+        },
+        "id,omitempty": {
+          "description": "ID field",
+          "type": "integer"
+        },
+        "isVerified,omitempty": {
+          "description": "IsVerified field",
+          "type": "boolean"
+        },
+        "lat,omitempty": {
+          "description": "Lat field",
+          "type": "string"
+        },
+        "lng,omitempty": {
+          "description": "Lng field",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name field",
+          "type": "string"
+        },
+        "password,omitempty": {
+          "description": "Password field",
+          "type": "string"
+        },
+        "phone,omitempty": {
+          "description": "Phone field",
+          "type": "string"
+        },
+        "photo,omitempty": {
+          "description": "Photo field",
+          "type": "string"
+        },
+        "roles,omitempty": {
+          "description": "Roles field",
+          "type": "array"
+        },
+        "sessionId,omitempty": {
+          "description": "SessionID field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "password,omitempty"
+      ],
+      "type": "object"
+    },
+    "UserDtoGetByEmail": {
+      "description": "Model: UserDtoGetByEmail",
+      "properties": {
+        "email": {
+          "description": "Email field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ],
+      "type": "object"
+    },
+    "UserDtoSigin": {
+      "description": "Model: UserDtoSigin",
+      "properties": {
+        "email": {
+          "description": "Email field",
+          "type": "string"
+        },
+        "password": {
+          "description": "Password field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "type": "object"
+    }
+  },
+  "host": "localhost:8080",
+  "info": {
+    "description": "API automatically generated from 13 discovered routes",
+    "title": "Auto-Discovered API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "//signout": {
+      "post": {
+        "description": "POST operation for //signout endpoint (handler: ua.SignOut)",
+        "operationId": "postSignout",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Signout",
+        "tags": [
+          "Signout"
+        ]
+      }
+    },
+    "/all": {
+      "post": {
+        "description": "POST operation for /all endpoint (handler: ua.GetAllUser)",
+        "operationId": "postAll",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post All",
+        "tags": [
+          "All"
+        ]
+      }
+    },
+    "/byemail": {
+      "post": {
+        "description": "POST operation for /byemail endpoint (handler: ua.GetUserByEmail)",
+        "operationId": "postByemail",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Byemail",
+        "tags": [
+          "Byemail"
+        ]
+      }
+    },
+    "/get/all": {
+      "post": {
+        "description": "POST operation for /get/all endpoint (handler: ua.GetAllUser)",
+        "operationId": "postGet",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Get",
+        "tags": [
+          "Get"
+        ]
+      }
+    },
+    "/get/byemail": {
+      "post": {
+        "description": "POST operation for /get/byemail endpoint (handler: ua.GetUserByEmail)",
+        "operationId": "postGet",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Get",
+        "tags": [
+          "Get"
+        ]
+      }
+    },
+    "/path": {
+      "post": {
+        "description": "POST operation for /path endpoint (handler: handler)",
+        "operationId": "postPath",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "summary": "Post Path",
+        "tags": [
+          "Path"
+        ]
+      }
+    },
+    "/signin": {
+      "post": {
+        "description": "POST operation for /signin endpoint (handler: ua.SignIn)",
+        "operationId": "postSignin",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Signin",
+        "tags": [
+          "Signin"
+        ]
+      }
+    },
+    "/signout": {
+      "post": {
+        "description": "POST operation for /signout endpoint (handler: ua.SignOut)",
+        "operationId": "postSignout",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Signout",
+        "tags": [
+          "Signout"
+        ]
+      }
+    },
+    "/signup": {
+      "post": {
+        "description": "POST operation for /signup endpoint (handler: ua.SignUp)",
+        "operationId": "postSignup",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Signup",
+        "tags": [
+          "Signup"
+        ]
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "description": "POST operation for /users/signin endpoint (handler: ua.SignIn)",
+        "operationId": "postUsers",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Users",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/signup": {
+      "post": {
+        "description": "POST operation for /users/signup endpoint (handler: ua.SignUp)",
+        "operationId": "postUsers",
+        "parameters": [
+          {
+            "description": "Request body",
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResponseDto"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Post Users",
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "description": "JWT Authorization header using Bearer scheme",
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
+    }
+  },
+  "swagger": "2.0"
+}
